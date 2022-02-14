@@ -6,7 +6,7 @@ import playlistInfo from "@/components/playlistInfo.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/my-playlist/",
     name: "home",
     component: CreateComponent,
   },
