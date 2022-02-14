@@ -24,7 +24,7 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-item nav-link active" href="#"
-            ><router-link to="/" class="nav-link">home</router-link></a
+            ><router-link to="/my-playlist/" class="nav-link">home</router-link></a
           >
           <a class="nav-item nav-link" href="#"
             ><router-link to="/view" class="nav-link">favorite</router-link></a
