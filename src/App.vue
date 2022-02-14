@@ -4,7 +4,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
       <a class="navbar-brand" href="#"
         ><router-link
-          to="/"
+          to="/my-playlist/"
           class="nav-link"
           style="color: #000; font-size: 24px"
           >ミMY PLAYLISTS</router-link
