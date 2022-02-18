@@ -27,7 +27,7 @@
         <p>total like {{totalLike}}</p>
         <p>total video {{totalVideo}}</p>
       </div>
-      <button type="button" class="btn btn-outline-success">Bookmark</button>
+      <button type="button" class="btn btn-outline-success" >Bookmark</button>
     </div>
   </div>
   <div class="main">
@@ -82,7 +82,7 @@ export default {
       description: [],
       videoId: [],
       videoUrl: [],
-      youtubeKey: "AIzaSyAF65tmnK9CCYfFWFUjxVgnqus49BGJ4nQ",
+      youtubeKey: "AIzaSyDWds2Dk-t8Cmt4ILN1oPjpCsu_hXQ-jbQ",
       playlistName: "",
       url:
         "https://www.youtube.com/embed/videoseries?list=" +
@@ -141,6 +141,23 @@ export default {
     },
   },
 };
+
+import { onMounted, ref } from "vue"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
+
+const isLoggedIn = ref(false);
+
+let auth;
+onMounted(() => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false;
+    }
+  });
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

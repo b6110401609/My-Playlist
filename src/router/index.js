@@ -3,6 +3,7 @@ import CreateComponent from "@/components/CreateComponent.vue";
 import EditComponent from "@/components/EditComponent.vue";
 import ListComponent from "@/components/ListComponent.vue";
 import playlistInfo from "@/components/playlistInfo.vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 const routes = [
   {
@@ -25,11 +26,45 @@ const routes = [
     name: "info",
     component: playlistInfo,
   },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import('../components/Login.vue'),
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import('../components/Register.vue'),
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+// const getCurrentUser = () => {
+//   return new Promise((resolve, reject) => {
+//     const removeListener = onAuthStateChanged(
+//       getAuth(),
+//         (user) => {
+//           removeListener();
+//           resolve(user);
+//         },
+//       reject
+//     );
+//   });
+// }
+
+// router.beforeEach(async(to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (await getCurrentUser()) {
+//       next();
+//     }
+//   } else {
+//     alert("you don't have access!")
+//     next("/favorite");
+//   }
+// });
 
 export default router;

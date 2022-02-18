@@ -101,7 +101,7 @@ export default {
       title: [],
       publishedAt: [],
       description: [],
-      youtubeKey: "AIzaSyAF65tmnK9CCYfFWFUjxVgnqus49BGJ4nQ",
+      youtubeKey: "AIzaSyDWds2Dk-t8Cmt4ILN1oPjpCsu_hXQ-jbQ",
       searchWord: "",
       student: {
         name: "",
