@@ -29,6 +29,9 @@
           <a class="nav-item nav-link" href="#"
             ><router-link to="/view" class="nav-link">favorite</router-link></a
           >
+          <a class="nav-item nav-link" href="#"
+            ><router-link to="/advance" class="nav-link">advance search</router-link></a
+          >
           <a class="nav-item nav-link active" href="#"
             ><router-link to="/login" class="nav-link" v-if="!isLoggedIn">Login</router-link></a
           >
@@ -46,7 +49,7 @@
     <div>
       <router-view></router-view>
     </div>
-    <footer style="height:200px;background-color:#da0037"></footer>
+    <!-- <footer style="bottom:0;height:200px;background-color:#da0037"></footer> -->
   </div>
 </template>
 <script setup>
@@ -103,8 +106,4 @@ const handleSignOut = () => {
     left: 0;
     z-index: 1030;
 }
-body {
-  background-color: #ededed;
-}
-
 </style>

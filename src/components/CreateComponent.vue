@@ -101,7 +101,7 @@ export default {
       title: [],
       publishedAt: [],
       description: [],
-      youtubeKey: "AIzaSyDWds2Dk-t8Cmt4ILN1oPjpCsu_hXQ-jbQ",
+      youtubeKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
       searchWord: "",
       student: {
         name: "",
@@ -167,7 +167,7 @@ export default {
 };
 </script>
 
-<style>
+<style scope>
 .search-bar {
   background-color: #cccccc;
   height: 80px;

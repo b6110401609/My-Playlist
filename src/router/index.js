@@ -4,6 +4,7 @@ import EditComponent from "@/components/EditComponent.vue";
 import ListComponent from "@/components/ListComponent.vue";
 import playlistInfo from "@/components/playlistInfo.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth"
+import AdvanceSearch from "@/components/advanceSearch.vue";
 
 const routes = [
   {
@@ -35,6 +36,10 @@ const routes = [
     path: "/register",
     name: "register",
     component: () => import('../components/Register.vue'),
+  },{
+    path: "/advance",
+    name: "advance",
+    component: AdvanceSearch,
   },
 ];
 
