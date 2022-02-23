@@ -5,6 +5,8 @@ import ListComponent from "@/components/ListComponent.vue";
 import playlistInfo from "@/components/playlistInfo.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 import AdvanceSearch from "@/components/advanceSearch.vue";
+import NormalSearch from "@/components/normalSearch.vue";
+import Favorite from "@/components/Favorite.vue";
 
 const routes = [
   {
@@ -40,6 +42,16 @@ const routes = [
     path: "/advance",
     name: "advance",
     component: AdvanceSearch,
+  },
+  {
+    path: "/search",
+    name: "search",
+    component: NormalSearch,
+  },
+  {
+    path: "/favorite",
+    name: "favorite",
+    component: Favorite,
   },
 ];
 

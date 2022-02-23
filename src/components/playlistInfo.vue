@@ -1,10 +1,12 @@
 <template>
   <div class="sidenav" style="padding: 20px">
     <h1 style="font-style: normal; font-weight: 500; font-size: 20px">
-      {{ playlistName }}
+      {{ playlistName }} <span class="badge badge-secondary" style="background-color: black" v-if="this.thaiContent"
+              >TH</span
+            >
     </h1>
     <iframe
-      class="playlist"
+      class="current-playlist"
       width="100%"
       height="330px"
       v-bind:src="url"
@@ -19,7 +21,7 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-top: 10px;
+        margin-top: 0px;
       "
     >
       <div class="playlist-stat">
@@ -27,17 +29,16 @@
         <p>total like {{ totalLike }}</p>
         <p>total video {{ totalVideo }}</p>
       </div>
-      <button type="button" class="btn btn-outline-success">Bookmark</button>
+      <button type="button" class="btn btn-outline-success" v-if="isLoggedIn">Bookmark</button>
     </div>
   </div>
-  <div class="main">
-    <div class="video" v-for="(title, i) in companiesLoaded" :key="i">
-      
+  <div class="main" style="padding-top:100px">
+    <div class="video" v-for="(videoArr, i) in videosLoaded" :key="i">
       <iframe
         class="thumbnail"
         width="367px"
         height="205px"
-        v-bind:src="videoUrl[i]"
+        v-bind:src="this.videoArr[i].videoUrl"
         title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -45,28 +46,44 @@
       ></iframe>
       <div class="video-info">
         <p class="video-name">
-          {{ title }}
+          {{ this.videoArr[i].title }}
         </p>
         <div class="video-channel">
-          
-        <img
-              class="channel-thumbnail"
-              :src="channelThumbnail[i]"
-            />
-            <p class="video-view">{{ channelTitle[i] }}</p>
+          <img class="channel-thumbnail" :src="this.videoArr[i].channelThumbnail" />
+          <p class="video-view">{{ this.videoArr[i].channelTitle }}</p>
         </div>
-        <p class="video-view">{{ views[i] }} views</p>
-        <p class="video-view">{{ likes[i] }} likes</p>
+        <p class="video-view">{{ this.videoArr[i].views }} views</p>
+        <p class="video-view">{{ this.videoArr[i].likes }} likes</p>
         <p class="video-des">
-          {{ description[i] }}
+          {{ this.videoArr[i].description }}
         </p>
       </div>
     </div>
-    <button class="loadMore-button" @click="loadMore" v-if="seen">load more</button>
+    <button class="loadMore-button" @click="loadMore" v-if="seen">
+      load more
+    </button>
   </div>
 </template>
 
 <script>
+import { onMounted, ref } from "vue";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const isLoggedIn = ref(false);
+
+let auth;
+onMounted(() => {
+  auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true;
+    } else {
+      isLoggedIn.value = false;
+    }
+  });
+});
 export default {
   mounted() {
     fetch(
@@ -88,14 +105,9 @@ export default {
       totalView: 0,
       totalLike: 0,
       totalVideo: 0,
-      title: [],
-      views: [],
-      likes: [],
-      description: [],
-      videoId: [],
-      videoUrl: [],
-      channelTitle: [],
-      channelThumbnail: [],
+      thaiContent: false,
+      videoArr: [],
+      REGEX_TH: /[ก-๙]/,
       youtubeKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
       playlistName: "",
       url:
@@ -104,12 +116,12 @@ export default {
     };
   },
   computed: {
-    companiesLoaded() {
-        if (this.length >= this.title.length && this.title.length!=0) {
-          console.log(this.length,this.title.length)
-          this.hideButton()
-        }
-        return this.title.slice(0, this.length);
+    videosLoaded() {
+      if (this.length >= this.videoArr.length && this.videoArr.length != 0) {
+        console.log(this.length, this.videoArr.length);
+        this.hideButton();
+      }
+      return this.videoArr.slice(0, this.length);
     },
   },
   methods: {
@@ -117,7 +129,7 @@ export default {
       this.seen = false;
     },
     loadMore() {
-      if (this.length > this.title.length) return;
+      if (this.length > this.videoArr.length) return;
       this.length = this.length + 5;
     },
     searchPlaylist(nextPageToken) {
@@ -133,20 +145,25 @@ export default {
           JSON.stringify(data);
           this.totalVideo = parseInt(data["pageInfo"]["totalResults"]);
           for (var videoIndex in data["items"]) {
-            this.title.push(data["items"][videoIndex]["snippet"]["title"]);
-            this.description.push(
-              data["items"][videoIndex]["snippet"]["description"]
-            );
-            this.videoId.push(
-              data["items"][videoIndex]["snippet"]["resourceId"]["videoId"]
-            );
-            this.videoUrl.push(
-              "https://www.youtube.com/embed/" +
-                data["items"][videoIndex]["snippet"]["resourceId"]["videoId"]
-            );
+            this.videoArr.push({
+              title: data["items"][videoIndex]["snippet"]["title"],
+              description: data["items"][videoIndex]["snippet"]["description"],
+              videoId: data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
+              videoUrl: "https://www.youtube.com/embed/" + data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
+              views: 0,
+              likes: 0,
+              channelTitle: "",
+              channelThumbnail: "",
+            })
+            if (this.REGEX_TH.test(data["items"][videoIndex]["snippet"]["title"])) {
+              this.thaiContent = true;
+            }
+            if (this.REGEX_TH.test(data["items"][videoIndex]["snippet"]["description"])) {
+              this.thaiContent = true;
+            }
             this.searchVideo(
-              this.videoId[this.videoId.length - 1],
-              this.videoId.length - 1
+              data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
+              videoIndex
             );
           }
           if (data["nextPageToken"]) {
@@ -163,17 +180,17 @@ export default {
         })
         .then((data) => {
           JSON.stringify(data);
-          this.views[videoIndex] = parseInt(
-            data["items"][0]["statistics"]["viewCount"]
-          );
-          this.totalView = this.totalView + this.views[videoIndex];
 
-          this.likes[videoIndex] = parseInt(
-            data["items"][0]["statistics"]["likeCount"]
-          );
-          this.totalLike = this.totalLike + this.likes[videoIndex];
+          this.videoArr[videoIndex].views = parseInt(data["items"][0]["statistics"]["viewCount"]);
+          this.videoArr[videoIndex].likes = parseInt(data["items"][0]["statistics"]["likeCount"]);
 
-          this.searchChannel(data["items"][0]["snippet"]["channelId"], videoIndex)
+          this.totalView = this.totalView + parseInt(data["items"][0]["statistics"]["viewCount"]);
+          this.totalLike = this.totalLike + parseInt(data["items"][0]["statistics"]["likeCount"]);
+
+          this.searchChannel(
+            data["items"][0]["snippet"]["channelId"],
+            videoIndex
+          );
         });
     },
     searchChannel(channelId, videoIndex) {
@@ -185,10 +202,8 @@ export default {
         })
         .then((data) => {
           JSON.stringify(data);
-          this.channelTitle[videoIndex] =
-            data["items"][0]["snippet"]["title"];
-          this.channelThumbnail[videoIndex] =
-            data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
+          this.videoArr[videoIndex].channelTitle = data["items"][0]["snippet"]["title"];
+          this.videoArr[videoIndex].channelThumbnail = data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
         });
     },
   },
@@ -201,7 +216,7 @@ export default {
   width: 500px;
   position: fixed;
   z-index: 1;
-  top: 60px;
+  top: 90px;
   left: 0;
   background-color: #ffffff;
   overflow-x: hidden;
@@ -217,15 +232,15 @@ export default {
   color: #f1f1f1;
 } */
 .main {
-  margin-top: 60px;
-  margin-left: 500px; 
+  padding-top: 100px;
+  margin-left: 500px;
   min-height: 100vh;
-  padding: 20px;
+  padding: 10px;
 }
 .video {
   display: flex;
   background-color: white;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding: 10px;
   box-shadow: 3px 3px 3px #cccccc;
 }
@@ -265,11 +280,13 @@ export default {
   min-height: 205px;
 }
 .channel-thumbnail {
-  width: 40px;
-  border-radius: 50%;
+  border-radius: 50%;width:40px;height:40px;border: 0.5px solid #cccccc;
   margin-right: 10px;
 }
 .loadMore-button {
-  width:100%
+  height: 50px;
+  width: 100%;
+  border: 0.5px solid rgb(100, 100, 100);
+  color: rgb(100, 100, 100);
 }
 </style>

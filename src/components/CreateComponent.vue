@@ -1,5 +1,6 @@
 <template>
-  <div class="search-bar">
+<div></div>
+  <!-- <div class="search-bar">
     <input
       type="text"
       class="from-control"
@@ -17,26 +18,33 @@
   <div id="app">
     <div v-show="toggle">
       <div class="container" style="margin-top: 15px">
-        <div v-for="(title, i) in title" :key="i" class="col-12">
+        <div v-for="(playlistArr, i) in playlistArr" :key="i" class="col-12">
           <router-link
-            :to="{ path: '/info/' + playlistId[i] }"
+            :to="{ path: '/info/' + this.playlistArr[i].playlistId }"
             class="nav-link playlist-card"
           >
             <div :id="'rank_' + i" class="rank-number">
               {{ i + 1 }}
             </div>
             <div class="palylist-info">
-              <div class="playlist-name" style="margin-bottom:20px">
-                {{ title }}
+              <div class="playlist-name" style="margin-bottom: 20px">
+                {{ this.playlistArr[i].playlistTitle }}
               </div>
               <div class="playlist-media" style="display: flex">
-                <img class="playlist-thumbnail" :src="thumbnails[i]" />
+                <img
+                  class="playlist-thumbnail"
+                  :src="this.playlistArr[i].playlistThumbnail"
+                />
                 <div class="playlist-static">
-                  <div class="published" style="margin-bottom:10px">
-                    {{ publishedAt[i] }}
+                  <div class="video-channel">
+                    <img class="channel-thumbnail" :src="this.playlistArr[i].channelThumbnail" />
+                    <p style="margin: auto;margin-left:0" class="video-view">{{ this.playlistArr[i].channelTitle }}</p>
+                  </div>
+                  <div class="published" style="margin-bottom: 10px">published at 
+                    {{ this.playlistArr[i].playlistPublish }}
                   </div>
                   <div class="description">
-                    {{ description[i] }}
+                    {{ this.playlistArr[i].playlisDescription }}
                   </div>
                 </div>
               </div>
@@ -45,129 +53,91 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- <div class="row justify-content-center">
-    <div class="col-md-6">
-
-      <h1>Create Student</h1>
-      <form @submit.prevent="handleSubmitForm">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="student.name"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            v-model="student.email"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone</label>
-          <input
-            type="text"
-            class="form-control"
-            v-model="student.phone"
-            required
-          />
-        </div>
-
-        <div class="form-group">
-          <button class="btn btn-success btn-block">Create</button>
-        </div>
-      </form>
-    </div>
   </div> -->
 </template>
 
 <script>
 // import $ from "jquery";
-import axios from "axios";
-export default {
-  el: "#app",
-  data() {
-    return {
-      toggle: false,
-      playlistId: [],
-      thumbnails: [],
-      title: [],
-      publishedAt: [],
-      description: [],
-      youtubeKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
-      searchWord: "",
-      student: {
-        name: "",
-        email: "",
-        phone: "",
-      },
-    };
-  },
-  methods: {
-    getPlaylistID() {
-      fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord}&key=${this.youtubeKey}&maxResults=10&type=playlist&relevanceLanguage=th&order=rating&regionCode=TH`
-      )
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          JSON.stringify(data);
-          for (var playlistIndex in data["items"]) {
-            this.playlistId[playlistIndex] =
-              data["items"][playlistIndex]["id"]["playlistId"];
-            this.thumbnails[playlistIndex] =
-              data["items"][playlistIndex]["snippet"]["thumbnails"]["medium"][
-                "url"
-              ];
-            this.title[playlistIndex] =
-              data["items"][playlistIndex]["snippet"]["title"];
-            this.publishedAt[playlistIndex] =
-              data["items"][playlistIndex]["snippet"]["publishedAt"];
-            this.description[playlistIndex] =
-              data["items"][playlistIndex]["snippet"]["description"];
-          }
-          this.updateData();
-        });
-      console.log(this.playlistName);
-      console.log(this.playlistId);
-      console.log(this.playlistThumbnail);
-    },
-    updateData() {
-      console.log("works");
-    },
-    searchPlaylist() {
-      console.log(this.className);
-      // $("body").addClass(this.className);
-    },
-    handleSubmitForm() {
-      let apiURL = "http://localhost:4000/api/create-student";
-      axios
-        .post(apiURL, this.student)
-        .then(() => {
-          this.$router.push("/view");
-          this.student = {
-            name: "",
-            email: "",
-            phone: "",
-          };
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-  },
-};
+// import axios from "axios";
+// export default {
+//   el: "#app",
+//   data() {
+//     return {
+//       playlistArr: [],
+//       toggle: false,
+//       apiKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
+//       searchWord: "",
+//     };
+//   },
+//   methods: {
+//     getPlaylistID() {
+//       this.playlistArr = [];
+//       if (this.searchWord != "") {
+//         fetch(
+//           `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord}&key=${this.apiKey}&maxResults=10&type=playlist&relevanceLanguage=th&order=rating&regionCode=TH`
+//         )
+//           .then((response) => {
+//             return response.json();
+//           })
+//           .then((data) => {
+//             JSON.stringify(data);
+//             for (var playlistIndex in data["items"]) {
+//               this.playlistArr.push({
+//                 playlistTitle: data["items"][playlistIndex]["snippet"]["title"],
+//                 playlistId: data["items"][playlistIndex]["id"]["playlistId"],
+//                 playlisDescription:
+//                   data["items"][playlistIndex]["snippet"]["description"],
+//                 playlistPublish:
+//                   data["items"][playlistIndex]["snippet"]["publishedAt"],
+//                 playlistThumbnail:
+//                   data["items"][playlistIndex]["snippet"]["thumbnails"][
+//                     "medium"
+//                   ]["url"],
+//                 channelTitle: "",
+//                 channelThumbnail: "",
+//               });
+//               this.searchChannel(
+//                 data["items"][playlistIndex]["snippet"]["channelId"],
+//                 playlistIndex
+//               );
+//             }
+//           });
+//       } else {
+//         alert("invalid data");
+//       }
+//     },
+//     searchChannel(channelId, playlistIndex) {
+//       fetch(
+//         `https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=${channelId}&key=${this.apiKey}`
+//       )
+//         .then((response) => {
+//           return response.json();
+//         })
+//         .then((data) => {
+//           JSON.stringify(data);
+//           this.playlistArr[playlistIndex].channelTitle =
+//             data["items"][0]["snippet"]["title"];
+//           this.playlistArr[playlistIndex].channelThumbnail =
+//             data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
+//         });
+//     },
+//   },
+// };
 </script>
 
 <style scope>
+/* .video-channel {
+  margin-top: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.channel-thumbnail {
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 1px solid #cccccc;
+}
 .search-bar {
   background-color: #cccccc;
   height: 80px;
@@ -195,13 +165,12 @@ export default {
   padding-top: 20px;
 }
 .playlist-thumbnail {
-  /* box-sizing: border-box; */
   width: 420px;
   height: 270px;
-  border: 1px solid #EDEDED;
+  border: 1px solid #ededed;
 }
 .palylist-info {
-  padding: 10px;
+  padding: 15px;
   padding-left: 15px;
 }
 .playlist-name {
@@ -214,7 +183,7 @@ export default {
   max-width: 1000px;
 }
 .playlist-static {
-  padding-left: 10px;
+  padding-left: 20px;
   font-style: normal;
   font-size: 18px;
   line-height: 21px;
@@ -244,6 +213,6 @@ export default {
 .open > .dropdown-toggle.btn-primary {
   color: #fff;
   background-color: #30475e;
-  border-color: #30475e; /*set the color you want here*/
-}
+  border-color: #30475e; 
+} */
 </style>

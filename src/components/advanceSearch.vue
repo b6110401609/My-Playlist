@@ -1,218 +1,228 @@
 <template>
-  <div class="search-field">
-    <table class="table table-borderless">
-      <thead>
-        <tr>
-          <th scope="col">Find pages with...</th>
-          <th scope="col"></th>
-          <th scope="col">To do this in the search box.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>search word</td>
-          <td style="display: flex; justify-content: center">
-            <input
-              type="text"
-              class="form-control"
-              id="validationDefault01"
-              placeholder="search"
-              v-model="searchWord"
-              required
-            />
-          </td>
-          <td>Type the important word</td>
-        </tr>
-        <tr>
-          <td>order by</td>
-          <td>
-            <select class="form-control" v-model="orderBy">
-              <option>rating</option>
-              <option>videoCount</option>
-              <option>viewCount</option>
-            </select>
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>max resault</td>
-          <td>
-            <select class="form-control" v-model="maxResault">
-              <option>10</option>
-              <option>20</option>
-              <option>25</option>
-              <option>50</option>
-            </select>
-          </td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>API key</td>
-          <td>
-            <input
-              type="text"
-              class="form-control"
-              id="validationDefault02"
-              placeholder="API key"
-              v-model="apiKey"
-              required
-            />
-          </td>
-          <td>Ex. AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td style="display: flex; justify-content: flex-end">
-            <button
-              class="btn btn-primary from-control"
-              type="submit"
-              v-on:click="getPlaylistID"
-            >
-              advance search
-            </button>
-          </td>
-          <td></td>
-        </tr>
-      </tbody>
-    </table>
-    <table class="table table-bordered" style="background-color: white">
-      <thead>
-        <tr>
-          <th scope="col" v-on:click="sortRanks">
-            rank
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-caret-down-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-              />
-            </svg>
-          </th>
-          <th scope="col">playlist name</th>
-          <th scope="col">thumbnail</th>
-          <th scope="col" v-on:click="sortViews">
-            views
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-caret-down-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-              />
-            </svg>
-          </th>
-          <th scope="col" v-on:click="sortLikes">
-            likes
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-caret-down-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-              />
-            </svg>
-          </th>
-          <th scope="col" v-on:click="sortVideos">
-            videos
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-caret-down-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-              />
-            </svg>
-          </th>
-          <th scope="col">other</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(playlistArr, i) in playlistArr" :key="i">
-          <th scope="row">{{ this.playlistArr[i].index }}</th>
-          <td style="width: 400px">
-            <router-link
-              :to="{ path: '/info/' + this.playlistArr[i].playlistId }"
-              >{{ this.playlistArr[i].playlistTitle }}</router-link
-            >
-          </td>
-          <td style="width: 240px">
-            <img
-              class="playlist-thumbnail"
-              :src="this.playlistArr[i].playlistThumbnail"
-            />
-          </td>
-          <!-- <td>
-            <p class="stat-info">total view: {{ this.playlistArr[i].sumViewCount }}</p>
-            <p class="stat-info">total like: {{ this.playlistArr[i].sumLikeCount }}</p>
-            <p class="stat-info">total video: {{ this.playlistArr[i].videos.length }}</p>
-            <p class="stat-info">
-              number of thai title name: {{ this.playlistArr[i].sumTitleTH }}
-            </p>
-            <p class="stat-info">
-              number of thai description: {{ this.playlistArr[i].sumDesTH }}
-            </p>
-          </td> -->
-
-          <td>
-            <p class="stat-info">{{ this.playlistArr[i].sumViewCount }}</p>
-          </td>
-          <td>
-            <p class="stat-info">{{ this.playlistArr[i].sumLikeCount }}</p>
-          </td>
-          <td>
-            <p class="stat-info">{{ this.playlistArr[i].videos.length }}</p>
-          </td>
-          <td>
-            <p class="stat-info">
-              published: {{ this.playlistArr[i].playlistPublish }}
-            </p>
-            <p class="stat-info">
-              playlist ID: {{ this.playlistArr[i].playlistId }}
-            </p>
-          </td>
-
-          <!-- <td>
-            <p class="stat-info">total view: {{ this.playlistArr[i].sumViewCount }}</p>
-          </td>
-          <td>
-            <p class="stat-info">total like: {{ this.playlistArr[i].sumLikeCount }}</p>
-          </td>
-          <td>
-            <p class="stat-info">total video: {{ this.playlistArr[i].videos.length }}</p>
-          </td>
-          <td>
-            <p class="stat-info">published: {{ this.playlistArr[i].playlistPublish }}</p>
-            <p class="stat-info">playlist ID: {{ this.playlistArr[i].playlistId }}</p>
-          </td> -->
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <main style="display: flex; justify-content: center">
+    <div class="main-content">
+      <div
+        class="advance-search-bar"
+        style="margin-top: 90px; padding: 20px 20px 5px 20px"
+      >
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 20%">Find playlists with...</th>
+              <th scope="col" style="width: 40%"></th>
+              <th scope="col" style="width: 40%">
+                To do this in the search box.
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>search word</td>
+              <td style="display: flex; justify-content: center">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="validationDefault01"
+                  placeholder="search"
+                  v-model="searchWord"
+                  required
+                />
+              </td>
+              <td>Type the important word</td>
+            </tr>
+            <tr>
+              <td>order by</td>
+              <td>
+                <select class="form-control" v-model="orderBy">
+                  <option>rating</option>
+                  <option>videoCount</option>
+                  <option>viewCount</option>
+                </select>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>max resault</td>
+              <td>
+                <select class="form-control" v-model="maxResault">
+                  <option>10</option>
+                  <option>20</option>
+                  <option>25</option>
+                  <option>50</option>
+                </select>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>API key</td>
+              <td>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="validationDefault02"
+                  placeholder="API key"
+                  v-model="apiKey"
+                  required
+                />
+              </td>
+              <td>Ex. AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td style="display: flex; justify-content: flex-end">
+                <button
+                  class="btn btn-primary from-control"
+                  type="submit"
+                  v-on:click="getPlaylistID"
+                >
+                  advance search
+                </button>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-bordered" style="background-color: white">
+          <thead>
+            <tr>
+              <th scope="col" v-on:click="sortRanks" style="width: 90px">
+                rank
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-caret-down-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+                  />
+                </svg>
+              </th>
+              <th scope="col">playlist name</th>
+              <th scope="col" style="width: 200px">thumbnail</th>
+              <th scope="col" v-on:click="sortViews" style="width: 90px">
+                views
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-caret-down-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+                  />
+                </svg>
+              </th>
+              <th scope="col" v-on:click="sortLikes" style="width: 90px">
+                likes
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-caret-down-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+                  />
+                </svg>
+              </th>
+              <th scope="col" v-on:click="sortVideos" style="width: 90px">
+                videos
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-caret-down-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+                  />
+                </svg>
+              </th>
+              <th scope="col" style="width: 110px">published</th>
+              <th scope="col" style="width: 60px;text-align:center">TH</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(playlistArr, i) in playlistArr" :key="i">
+              <th scope="row">{{ this.playlistArr[i].index }}</th>
+              <td>
+                <router-link style=" color: inherit;"
+                  :to="{ path: '/info/' + this.playlistArr[i].playlistId }"
+                  >{{ this.playlistArr[i].playlistTitle }}</router-link
+                >
+              </td>
+              <td>
+                <img
+                  class="playlist-thumbnail"
+                  :src="this.playlistArr[i].playlistThumbnail"
+                />
+              </td>
+              <td>
+                <p class="stat-info">{{ this.playlistArr[i].sumViewCount }}</p>
+              </td>
+              <td>
+                <p class="stat-info">{{ this.playlistArr[i].sumLikeCount }}</p>
+              </td>
+              <td>
+                <p class="stat-info">{{ this.playlistArr[i].videos.length }}</p>
+              </td>
+              <td>
+                <p class="stat-info">
+                  {{ this.playlistArr[i].playlistPublish }}
+                </p>
+              </td>
+              <td style="text-align:center">
+                <svg
+                  v-if="!this.playlistArr[i].TH"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  fill="currentColor"
+                  class="bi bi-x-circle"
+                  viewBox="0 0 16 16"
+                  style="color:#ff3333"
+                >
+                  <path
+                    d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                  />
+                  <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+                <svg
+                  v-if="this.playlistArr[i].TH"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  fill="currentColor"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                  style="color:	#0BDA51"
+                >
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                  />
+                </svg>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -224,6 +234,7 @@ export default {
       playlistArr: [],
     };
   },
+  
   methods: {
     logInfo() {
       console.log(this.playlistArr);
@@ -248,19 +259,19 @@ export default {
               var playlistId = data["items"][playlistIndex]["id"]["playlistId"];
               this.playlistArr.push({
                 playlistTitle: data["items"][playlistIndex]["snippet"]["title"],
-                playlistPublish:
-                  data["items"][playlistIndex]["snippet"]["publishedAt"],
+                playlistPublish: data["items"][playlistIndex]["snippet"][
+                  "publishedAt"
+                ].substring(0, 10),
                 playlistThumbnail:
                   data["items"][playlistIndex]["snippet"]["thumbnails"][
                     "medium"
                   ]["url"],
-                index: parseInt(playlistIndex)+1,
+                index: parseInt(playlistIndex) + 1,
                 playlistId: playlistId,
                 videos: [],
                 sumViewCount: 0,
                 sumLikeCount: 0,
-                sumTitleTH: 0,
-                sumDesTH: 0,
+                TH: false,
               });
               this.getVideoID(playlistId, playlistIndex);
             }
@@ -315,13 +326,12 @@ export default {
           var commentCount = parseInt(
             data["items"][0]["statistics"]["commentCount"]
           );
-          var titleTH = false;
-          var desTH = false;
+          var TH = false;
           if (REGEX_TH.test(title)) {
-            titleTH = true;
+            TH = true;
           }
           if (REGEX_TH.test(description)) {
-            desTH = true;
+            TH = true;
           }
           this.playlistArr[playlistIndex]["videos"][videoIndex][
             "videoInfo"
@@ -330,9 +340,9 @@ export default {
             viewCount: viewCount,
             likeCount: likeCount,
             commentCount: commentCount,
-            titleTH: titleTH,
-            desTH: desTH,
+            TH: TH,
           });
+          this.playlistArr[playlistIndex].TH = TH;
           this.summary(playlistIndex, videoIndex);
         });
     },
@@ -377,8 +387,7 @@ export default {
     },
     sortRanks() {
       this.playlistArr.sort(
-        (firstItem, secondItem) =>
-          firstItem.index - secondItem.index
+        (firstItem, secondItem) => firstItem.index - secondItem.index
       );
     },
   },
@@ -387,18 +396,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.search-field {
-  width: 100%;
-  margin-top: 60px;
+.main-content {
+  width: 70%;
+  min-height: 100vh;
+  background-color: #fff;
 }
 .playlist-thumbnail {
-  max-width: 240px;
-  max-height: 150px;
+  width: 100%;
+  max-height: 110px;
 }
-.stat-info {
-  margin: 0;
-  font-size: 12px;
-  line-height: 21px;
-  color: #4e4e4e;
-}
+  
 </style>

@@ -1,9 +1,22 @@
 nes (68 sloc)  2.4 KB
    
 <template>
-    <div class="row justify-content-center">
+  <!-- <div class="sidenav" style="padding: 20px">
+    <h1>show only</h1>
+  </div>
+  <div class="main" style="padding-top: 100px">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5"  v-for="(playlistArr, i) in playlistArr" :key="i">
+          {{ this.playlistArr[i].x }}
+          <router-link style="height:200px;background-color:pink"></router-link>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- <div class="row justify-content-center">
         <div class="col-md-12">
-            <!-- Display goes here -->
             <h1>Show students</h1>
             <div class="row">
                 <div class="col-md-12">
@@ -35,37 +48,36 @@ nes (68 sloc)  2.4 KB
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+    <div></div>
 </template>
 
 <script>
-import axios from 'axios';
-export default {
-    data() {
-        return {
-            Students: []
-        }
-    },
-    created() {
-        let apiURL = 'http://localhost:4000/api';
-        axios.get(apiURL).then(res => {
-            this.Students = res.data
-        }).catch(error => {
-            console.log(error)
-        })
-    },
-    methods: {
-        deleteStudent(id) {
-            let apiURL = `http://localhost:4000/api/delete-student/${id}`;
-            let indexOfArrayItem = this.Students.findIndex(i => i._id === id);
-            if (window.confirm("Do you really want to delete?")) {
-                axios.delete(apiURL).then(() => {
-                    this.Students.splice(indexOfArrayItem, 1)
-                }).catch(error => {
-                    console.log(error)
-                })
-            }
-        }
-    }
-}
+// export default {
+//   data() {
+//     return {
+//       playlistArr: [{x:"1"},{x:"2"},{x:"3"}],
+//     };
+//   },
+// };
 </script>
+
+<style scoped>
+/* .sidenav {
+  height: 100%;
+  width: 300px;
+  position: fixed;
+  z-index: 1;
+  top: 90px;
+  left: 0;
+  background-color: #444444;
+  overflow-x: hidden;
+  padding-top: 110px;
+}
+.main {
+  padding-top: 100px;
+  margin-left: 500px;
+  min-height: 100vh;
+  padding: 10px;
+} */
+</style>
