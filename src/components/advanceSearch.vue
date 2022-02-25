@@ -33,7 +33,11 @@
             <tr>
               <td>order by</td>
               <td>
-                <select class="form-control" v-model="orderBy">
+                <select
+                  class="form-control"
+                  v-model="orderBy"
+                  id="validationDefault02"
+                >
                   <option>rating</option>
                   <option>videoCount</option>
                   <option>viewCount</option>
@@ -44,7 +48,11 @@
             <tr>
               <td>max resault</td>
               <td>
-                <select class="form-control" v-model="maxResault">
+                <select
+                  class="form-control"
+                  v-model="maxResault"
+                  id="validationDefault03"
+                >
                   <option>10</option>
                   <option>20</option>
                   <option>25</option>
@@ -59,13 +67,34 @@
                 <input
                   type="text"
                   class="form-control"
-                  id="validationDefault02"
+                  id="validationDefault04"
                   placeholder="API key"
                   v-model="apiKey"
                   required
                 />
               </td>
-              <td>Ex. AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg</td>
+              <td>
+                <div>Ex. AIzaSyBB_b0Ad-qSXNfnbwba9COxvkJcow1sacc</div>
+                <router-link to="/guide"
+                  >how to get API key
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="13"
+                    height="13"
+                    fill="currentColor"
+                    class="bi bi-box-arrow-up-right"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"
+                    /></svg
+                ></router-link>
+              </td>
             </tr>
             <tr>
               <td></td>
@@ -82,6 +111,7 @@
             </tr>
           </tbody>
         </table>
+
         <table class="table table-bordered" style="background-color: white">
           <thead>
             <tr>
@@ -148,14 +178,15 @@
                 </svg>
               </th>
               <th scope="col" style="width: 110px">published</th>
-              <th scope="col" style="width: 60px;text-align:center">TH</th>
+              <th scope="col" style="width: 60px; text-align: center">TH</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(playlistArr, i) in playlistArr" :key="i">
               <th scope="row">{{ this.playlistArr[i].index }}</th>
               <td>
-                <router-link style=" color: inherit;"
+                <router-link
+                  style="color: inherit"
                   :to="{ path: '/info/' + this.playlistArr[i].playlistId }"
                   >{{ this.playlistArr[i].playlistTitle }}</router-link
                 >
@@ -180,7 +211,7 @@
                   {{ this.playlistArr[i].playlistPublish }}
                 </p>
               </td>
-              <td style="text-align:center">
+              <td style="text-align: center">
                 <svg
                   v-if="!this.playlistArr[i].TH"
                   xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +220,7 @@
                   fill="currentColor"
                   class="bi bi-x-circle"
                   viewBox="0 0 16 16"
-                  style="color:#ff3333"
+                  style="color: #ff3333"
                 >
                   <path
                     d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
@@ -206,7 +237,7 @@
                   fill="currentColor"
                   class="bi bi-check-circle-fill"
                   viewBox="0 0 16 16"
-                  style="color:	#0BDA51"
+                  style="color: #0bda51"
                 >
                   <path
                     d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
@@ -222,7 +253,7 @@
 </template>
 
 <script>
-
+import $ from "jquery";
 export default {
   data() {
     return {
@@ -234,7 +265,7 @@ export default {
       playlistArr: [],
     };
   },
-  
+
   methods: {
     logInfo() {
       console.log(this.playlistArr);
@@ -242,15 +273,29 @@ export default {
     getPlaylistID() {
       this.playlistArr = [];
       if (
-        this.searchWord != null &&
-        this.apiKey != null &&
-        this.orderBy != null &&
-        this.maxResault != null
+        this.searchWord.trim() != "" &&
+        this.apiKey != "" &&
+        this.orderBy != "" &&
+        this.maxResault != ""
       ) {
+        $("#validationDefault01").css("background-color", "#FFF");
+        $("#validationDefault02").css("background-color", "#FFF");
+        $("#validationDefault03").css("background-color", "#FFF");
+        $("#validationDefault04").css("background-color", "#FFF");
         fetch(
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord}&key=${this.apiKey}&maxResults=${this.maxResault}&type=playlist&relevanceLanguage=th&order=${this.orderBy}&regionCode=TH`
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
+            this.apiKey
+          }&maxResults=${
+            this.maxResault
+          }&type=playlist&relevanceLanguage=th&order=${
+            this.orderBy
+          }&regionCode=TH`
         )
           .then((response) => {
+            console.log(response.status);
+            if (response.status != 200) {
+              alert("API key error");
+            }
             return response.json();
           })
           .then((data) => {
@@ -278,6 +323,18 @@ export default {
           });
       } else {
         alert("invalid data");
+        if (this.searchWord.trim() == "") {
+          $("#validationDefault01").css("background-color", "#FFFCDC");
+        }
+        if (this.orderBy == "") {
+          $("#validationDefault02").css("background-color", "#FFFCDC");
+        }
+        if (this.maxResault == "") {
+          $("#validationDefault03").css("background-color", "#FFFCDC");
+        }
+        if (this.apiKey == "") {
+          $("#validationDefault04").css("background-color", "#FFFCDC");
+        }
       }
     },
     getVideoID(playlistId, playlistIndex, nextPageToken) {
@@ -405,5 +462,4 @@ export default {
   width: 100%;
   max-height: 110px;
 }
-  
 </style>

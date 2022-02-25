@@ -91,6 +91,9 @@ export default {
           `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${this.apiKey}&maxResults=10&type=playlist&relevanceLanguage=th&order=rating&regionCode=TH`
         )
           .then((response) => {
+            if (response.status != 200) {
+              alert("API key error")
+            }
             return response.json();
           })
           .then((data) => {

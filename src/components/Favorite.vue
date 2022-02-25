@@ -140,7 +140,7 @@ export default {
   width: 200px;
   color: #30475e;
   background-color: #fff;
-  border-color: #30475e;
+  border: solid 2px #30475e;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,7 +151,7 @@ export default {
   width: 200px;
   color: #fff;
   background-color: #30475e;
-  border-color: #30475e;
+  border: solid 2px #30475e;
   display: flex;
   align-items: center;
   justify-content: center;

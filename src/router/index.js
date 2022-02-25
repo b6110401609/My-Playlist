@@ -7,6 +7,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 import AdvanceSearch from "@/components/advanceSearch.vue";
 import NormalSearch from "@/components/normalSearch.vue";
 import Favorite from "@/components/Favorite.vue";
+import Guide from "@/components/Guide.vue";
 
 const routes = [
   {
@@ -52,6 +53,11 @@ const routes = [
     path: "/favorite",
     name: "favorite",
     component: Favorite,
+  },
+  {
+    path: "/guide",
+    name: "guide",
+    component: Guide,
   },
 ];
 
