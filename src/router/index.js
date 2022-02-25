@@ -14,6 +14,9 @@ const routes = [
     path: "/my-playlist/",
     name: "home",
     component: CreateComponent,
+    meta: {
+      title: 'My Playlist'
+    }
   },
   {
     path: "/view",
@@ -29,35 +32,56 @@ const routes = [
     path: "/info/:id",
     name: "info",
     component: playlistInfo,
+    meta: {
+      title: 'My Playlist | Info'
+    }
   },
   {
     path: "/login",
     name: "login",
     component: () => import('../components/Login.vue'),
+    meta: {
+      title: 'My Playlist | Login'
+    }
   },
   {
     path: "/register",
     name: "register",
     component: () => import('../components/Register.vue'),
+    meta: {
+      title: 'My Playlist | Register'
+    }
   },{
     path: "/advance",
     name: "advance",
     component: AdvanceSearch,
+    meta: {
+      title: 'My Playlist | Advance Search'
+    }
   },
   {
     path: "/search",
     name: "search",
     component: NormalSearch,
+    meta: {
+      title: 'My Playlist | Search'
+    }
   },
   {
     path: "/favorite",
     name: "favorite",
     component: Favorite,
+    meta: {
+      title: 'My Playlist | Favorite'
+    }
   },
   {
     path: "/guide",
     name: "guide",
     component: Guide,
+    meta: {
+      title: 'My Playlist | Guide'
+    }
   },
 ];
 
@@ -65,6 +89,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  document.title = `${to.meta.title}`;
+  next()
+})
 
 // const getCurrentUser = () => {
 //   return new Promise((resolve, reject) => {
