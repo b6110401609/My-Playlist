@@ -82,7 +82,7 @@
             ><router-link to= class="nav-link" @click="handleSignOut" v-if="isLoggedIn">Sign out</router-link></a
           > -->
           <a class="nav-item nav-link" href="#"
-          ><router-link to="/register" class="nav-link" @click="handleSignOut"
+          ><router-link to="/my-playlist" class="nav-link" @click="handleSignOut"
           v-if="isLoggedIn"
             >Sign out</router-link
           ></a
@@ -118,7 +118,7 @@ onMounted(() => {
 
 const handleSignOut = () => {
   signOut(auth).then(() => {
-    router.push("/login");
+    router.push("/my-playlist");
   });
 };
 </script>

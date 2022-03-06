@@ -12,7 +12,7 @@
       <h3 style="padding-top:20px;padding-left:20px;margin:0">Your Liked Playlist</h3>
       <div
         v-for="(playlistArr, i) in playlistArr"
-        :key="i"
+        :key="playlistArr._id"
         style="box-shadow: 0px 1px 0px #cccccc; display: flex"
         :class="'playlist ' + this.playlistArr[i].language"
       > 
@@ -46,6 +46,7 @@
             type="button"
             class="btn btn-outline-danger unLike-button"
             :value="this.playlistArr[i].playlistId"
+            @click.prevent="deleteFavorite(playlistArr._id)"
           >
             unlike
           </button>
@@ -57,31 +58,39 @@
 
 <script>
 import $ from "jquery";
+import axios from "axios";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 export default {
   mounted() {
-    this.clickLanguage();
+    // this.clickLanguage();
+    let auth = getAuth();
+    const isLoggedIn = false
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        axios.get('http://localhost:4000/api')
+        .then((response) => {
+        const email = user.email
+        const tempArr = []
+        for (let i = 0; i < response.data.length; i++) {
+          if (email == response.data[i].userEmail){
+            tempArr.push(response.data[i])
+          }
+        }
+        this.playlistArr = tempArr
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      } else {
+        console.log("Not Log in")
+      }
+    });
   },
   data() {
     return {
       chooseLanguage: "",
-      playlistArr: [
-        {
-          playlistId: "PLdUycnH9LIfimTKk79pwb1RS1XXsXMXhb",
-          playlistTitle: "แคลคูลัส (Calculus)",
-          language: "TH",
-        },
-        {
-          playlistId: "PLz7t89zv8Lp2ZfGAI0KZHrfLnfnJQNACv",
-          playlistTitle: "Math 1210 - Calculus I",
-          language: "NA",
-        },
-        {
-          playlistId: "PLGKxWeKRIy4WVzMzL4OB8HVabYagNrkO5",
-          playlistTitle:
-            "Multivariable Calculus -- to accompany text by Clark Bray",
-          language: "NA",
-        },
-      ],
+      playlistArr: [],
       toggle: false,
       apiKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
       searchWord: "",
@@ -89,35 +98,46 @@ export default {
     };
   },
   methods: {
-    clickLanguage() {
-      $("#TH").click(function () {
-        $("#TH, #THNA, #NA").removeClass("btn-language-clicked");
-        $(this).addClass("btn-language-clicked");
-      });
-      $("#THNA").click(function () {
-        $("#TH, #THNA, #NA").removeClass("btn-language-clicked");
-        $(this).addClass("btn-language-clicked");
-      });
-      $("#NA").click(function () {
-        $("#TH, #THNA, #NA").removeClass("btn-language-clicked");
-        $(this).addClass("btn-language-clicked");
-      });
-      $("#TH").click(function () {
-        $(".TH, .NA").hide();
-        $(".TH").show();
-      });
-      $("#NA").click(function () {
-        $(".TH, .NA").hide();
-        $(".NA").show();
-      });
-      $("#THNA").click(function () {
-        $(".TH, .NA").show();
-      });
-      $(".unLike-button").click(function () {
-        $(this).parent('div').parent('div').hide();
-        alert("unlike: "+ $(this).val())
-      });
-    },
+    // clickLanguage() {
+    //   $("#TH").click(function () {
+    //     $("#TH, #THNA, #NA").removeClass("btn-language-clicked");
+    //     $(this).addClass("btn-language-clicked");
+    //   });
+    //   $("#THNA").click(function () {
+    //     $("#TH, #THNA, #NA").removeClass("btn-language-clicked");
+    //     $(this).addClass("btn-language-clicked");
+    //   });
+    //   $("#NA").click(function () {
+    //     $("#TH, #THNA, #NA").removeClass("btn-language-clicked");
+    //     $(this).addClass("btn-language-clicked");
+    //   });
+    //   $("#TH").click(function () {
+    //     $(".TH, .NA").hide();
+    //     $(".TH").show();
+    //   });
+    //   $("#NA").click(function () {
+    //     $(".TH, .NA").hide();
+    //     $(".NA").show();
+    //   });
+    //   $("#THNA").click(function () {
+    //     $(".TH, .NA").show();
+    //   });
+    //   $(".unLike-button").click(function () {
+    //     $(this).parent('div').parent('div').hide();
+    //     alert("unlike: "+ $(this).val())
+    //   });
+    // },
+    deleteFavorite(id){
+      let apiURL = `http://localhost:4000/api/delete-favorite/${id}`;
+      let indexOfArrayItem = this.playlistArr.findIndex(i => i._id === id);
+      if (window.confirm("Do you really want to unlike?")) {
+          axios.delete(apiURL).then(() => {
+              this.playlistArr.splice(indexOfArrayItem, 1);
+          }).catch(error => {
+              console.log(error)
+          });
+      }
+    }
   },
 };
 </script>

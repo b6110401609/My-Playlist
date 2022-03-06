@@ -29,7 +29,7 @@
         <p>total like {{ totalLike }}</p>
         <p>total video {{ totalVideo }}</p>
       </div>
-      <button type="button" class="btn btn-outline-success" v-if="isLoggedIn">Bookmark</button>
+      <button type="button" class="btn btn-outline-success" v-if="isLoggedIn" @click="handleSubmitBookmark">Bookmark</button>
     </div>
   </div>
   <div class="main" style="padding-top:100px">
@@ -66,24 +66,9 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { useRouter } from "vue-router";
+import axios from "axios";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const router = useRouter();
-const isLoggedIn = ref(false);
-
-let auth;
-onMounted(() => {
-  auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      isLoggedIn.value = true;
-    } else {
-      isLoggedIn.value = false;
-    }
-  });
-});
 export default {
   mounted() {
     fetch(
@@ -95,8 +80,20 @@ export default {
       .then((data) => {
         JSON.stringify(data);
         this.playlistName = data["items"][0]["snippet"]["localized"]["title"];
+        this.favorite.playlistTitle = data["items"][0]["snippet"]["localized"]["title"];
+
         this.searchPlaylist();
       });
+    let auth = getAuth();
+    const isLoggedIn = false
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.isLoggedIn = true;
+        this.favorite.userEmail = user.email
+      } else {
+        this.isLoggedIn = false;
+      }
+    });
   },
   data() {
     return {
@@ -106,13 +103,20 @@ export default {
       totalLike: 0,
       totalVideo: 0,
       thaiContent: false,
+      thai: "",
       videoArr: [],
       REGEX_TH: /[ก-๙]/,
-      youtubeKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
+      youtubeKey: "AIzaSyDWds2Dk-t8Cmt4ILN1oPjpCsu_hXQ-jbQ",
       playlistName: "",
       url:
         "https://www.youtube.com/embed/videoseries?list=" +
         this.$route.params.id,
+      favorite: {
+        playlistId: this.$route.params.id,
+        playlistTitle: "",
+        userEmail: "",
+        language: ""
+      }
     };
   },
   computed: {
@@ -157,9 +161,17 @@ export default {
             })
             if (this.REGEX_TH.test(data["items"][videoIndex]["snippet"]["title"])) {
               this.thaiContent = true;
+              this.favorite.language = "TH";
+              this.thai = "TH";
             }
             if (this.REGEX_TH.test(data["items"][videoIndex]["snippet"]["description"])) {
               this.thaiContent = true;
+              this.favorite.language = "TH";
+              this.thai = "TH";
+            }
+            else if (this.thaiContent == false){
+              this.favorite.language = "NA";
+              this.thai = "NA";
             }
             this.searchVideo(
               data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
@@ -206,6 +218,21 @@ export default {
           this.videoArr[videoIndex].channelThumbnail = data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
         });
     },
+    handleSubmitBookmark(){
+      let apiURL = 'http://localhost:4000/api/create-favorite'; 
+
+      axios.post(apiURL, this.favorite).then(() => {
+        this.$router.push("/favorite")
+        this.favorite = {
+          playlistId: "",
+          playlistTitle: "",
+          userId: "",
+          language: ""
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    }
   },
 };
 </script>

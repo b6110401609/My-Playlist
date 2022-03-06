@@ -79,7 +79,7 @@ export default {
     return {
       playlistArr: [],
       toggle: false,
-      apiKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
+      apiKey: "AIzaSyDWds2Dk-t8Cmt4ILN1oPjpCsu_hXQ-jbQ",
       searchWord: "",
     };
   },
