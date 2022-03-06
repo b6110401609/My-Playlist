@@ -1,71 +1,169 @@
 <template>
-  <div class="sidenav" style="padding: 20px">
-    <h1 style="font-style: normal; font-weight: 500; font-size: 20px">
-      {{ playlistName }} <span class="badge badge-secondary" style="background-color: black" v-if="this.thaiContent"
-              >TH</span
-            >
-    </h1>
-    <iframe
-      class="current-playlist"
-      width="100%"
-      height="330px"
-      v-bind:src="url"
-      title="YouTube video player"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen
-    ></iframe>
-    <div
-      class="playlist-info"
-      style="
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-top: 0px;
-      "
-    >
-      <div class="playlist-stat">
-        <p>total view {{ totalView }}</p>
-        <p>total like {{ totalLike }}</p>
-        <p>total video {{ totalVideo }}</p>
+  <div class="con small-playlist-header">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 style="font-style: normal; font-weight: 500; font-size: 20px">
+          {{ playlistName }}
+          <span
+            class="badge badge-secondary"
+            style="background-color: black"
+            v-if="this.thaiContent"
+            >TH
+          </span>
+        </h1>
       </div>
-      <button type="button" class="btn btn-outline-success" v-if="isLoggedIn" @click="handleSubmitBookmark">Bookmark</button>
+    </div>
+    <div class="row small-playlist-info" style="display: none">
+      <div class="col-sm-12">
+        <iframe
+          class="iframe"
+          width="100%"
+          height="250px"
+          v-bind:src="url"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        >
+        </iframe>
+      </div>
+      <div class="col-sm-12">
+        <div class="playlist-stat">
+          <p>total view {{ totalView }}</p>
+          <p>total like {{ totalLike }}</p>
+          <p>total video {{ totalVideo }}</p>
+        </div>
+        <button type="button" class="btn btn-success btn-sm" v-if="isLoggedIn" @click="handleSubmitBookmark" style="margin-top:5px">Bookmark</button>
+      </div>
+    </div>
+    <div class="col-sm-12" style="display:flex;justify-content:center;">
+        <button
+          id="show_more"
+          style="
+            border: none;
+            background: none;
+            padding: 0px;
+            color: white
+          "
+        >
+          show more information
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-chevron-double-down"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </button>
+      </div>
+  </div>
+  <div class="con medium-playlist-header">
+    <div class="row">
+      <div class="col-sm-7">
+        <iframe
+          class="iframe"
+          width="100%"
+          height="250px"
+          v-bind:src="url"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        >
+        </iframe>
+      </div>
+      <div class="col-sm-5">
+        <h1 style="font-style: normal; font-weight: 500; font-size: 20px">
+          {{ playlistName }}
+          <span
+            class="badge badge-secondary"
+            style="background-color: black"
+            v-if="this.thaiContent"
+            >TH
+          </span>
+        </h1>
+        <div class="playlist-stat">
+          <p>total view {{ totalView }}</p>
+          <p>total like {{ totalLike }}</p>
+          <p>total video {{ totalVideo }}</p>
+        </div>
+        <button type="button" class="btn btn-success btn-sm" v-if="isLoggedIn" @click="handleSubmitBookmark" style="margin-top:5px">Bookmark</button>
+      </div>
     </div>
   </div>
-  <div class="main" style="padding-top:100px">
-    <div class="video" v-for="(videoArr, i) in videosLoaded" :key="i">
-      <iframe
-        class="thumbnail"
-        width="367px"
-        height="205px"
-        v-bind:src="this.videoArr[i].videoUrl"
-        title="YouTube video player"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-      <div class="video-info">
-        <p class="video-name">
-          {{ this.videoArr[i].title }}
-        </p>
-        <div class="video-channel">
-          <img class="channel-thumbnail" :src="this.videoArr[i].channelThumbnail" />
-          <p class="video-view">{{ this.videoArr[i].channelTitle }}</p>
+  <div style="min-height: 10px; background-color: #f3f3f3"></div>
+  <div class="con" style="padding:0">
+    <div
+      class="row"
+      v-for="(videoArr, i) in videosLoaded"
+      :key="i"
+      style="
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-bottom: 1px solid #cccccc;
+        margin-left: 0px;
+        margin-right: 0px;
+      "
+    >
+      <div class="col-md-5">
+        <iframe
+          class="iframe"
+          width="100%"
+          height="205px"
+          v-bind:src="this.videoArr[i].videoUrl"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <div class="col-md-7">
+        <div class="video-title">
+          <p>
+            {{ this.videoArr[i].title }}
+          </p>
         </div>
-        <p class="video-view">{{ this.videoArr[i].views }} views</p>
-        <p class="video-view">{{ this.videoArr[i].likes }} likes</p>
-        <p class="video-des">
-          {{ this.videoArr[i].description }}
-        </p>
+        <div class="video-channel">
+          <img
+            class="channel-thumbnail"
+            :src="this.videoArr[i].channelThumbnail"
+          />
+          <p class="channel-name">{{ this.videoArr[i].channelTitle }}</p>
+        </div>
+        <div class="video-stat">
+          <p class="video-stat-views">{{ this.videoArr[i].views }} views</p>
+          <p class="video-stat-likes">{{ this.videoArr[i].likes }} likes</p>
+        </div>
+        <div class="video-description">
+          <p>{{ this.videoArr[i].description }}</p>
+        </div>
       </div>
     </div>
-    <button class="loadMore-button" @click="loadMore" v-if="seen">
-      load more
-    </button>
+    <div style="min-height: 10px; background-color: #f3f3f3"></div>
+    <div v-if="seen" class="row" style="padding-bottom: 10px;
+        padding-top: 10px;
+        margin-left: 0px;
+        margin-right: 0px;">
+      <div class="col">
+        <button class="loadMore-btn" @click="loadMore" v-if="seen">load more</button>
+      </div>
+    </div>
+    <div style="min-height: 20px; background-color: #f3f3f3"></div>
   </div>
 </template>
 
 <script>
+import $ from "jquery";
 import axios from "axios";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -83,6 +181,7 @@ export default {
         this.favorite.playlistTitle = data["items"][0]["snippet"]["localized"]["title"];
 
         this.searchPlaylist();
+        this.click();
       });
     let auth = getAuth();
     const isLoggedIn = false
@@ -106,7 +205,7 @@ export default {
       thai: "",
       videoArr: [],
       REGEX_TH: /[ก-๙]/,
-      youtubeKey: "AIzaSyDWds2Dk-t8Cmt4ILN1oPjpCsu_hXQ-jbQ",
+      youtubeKey: "AIzaSyDfDlAABAWzSgZXFZe-YkgE1oprtMyPW5o",
       playlistName: "",
       url:
         "https://www.youtube.com/embed/videoseries?list=" +
@@ -129,6 +228,30 @@ export default {
     },
   },
   methods: {
+    click() {
+      $("#show_more").click(function () {
+        if ($("#show_more").hasClass("open")) {
+          $(".small-playlist-info").slideUp();
+          $("#show_more").removeClass("open");
+          $("#show_more").html(`
+          show more infomation
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+          <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        `);
+        } else {
+          $(".small-playlist-info").slideDown();
+          $("#show_more").addClass("open");
+          $("#show_more").html(`
+          show less
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
+        <path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+        </svg>`);
+        }
+      });
+    },
     hideButton() {
       this.seen = false;
     },
@@ -152,19 +275,28 @@ export default {
             this.videoArr.push({
               title: data["items"][videoIndex]["snippet"]["title"],
               description: data["items"][videoIndex]["snippet"]["description"],
-              videoId: data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
-              videoUrl: "https://www.youtube.com/embed/" + data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
+              videoId:
+                data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
+              videoUrl:
+                "https://www.youtube.com/embed/" +
+                data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
               views: 0,
               likes: 0,
               channelTitle: "",
               channelThumbnail: "",
-            })
-            if (this.REGEX_TH.test(data["items"][videoIndex]["snippet"]["title"])) {
+            });
+            if (
+              this.REGEX_TH.test(data["items"][videoIndex]["snippet"]["title"])
+            ) {
               this.thaiContent = true;
               this.favorite.language = "TH";
               this.thai = "TH";
             }
-            if (this.REGEX_TH.test(data["items"][videoIndex]["snippet"]["description"])) {
+            if (
+              this.REGEX_TH.test(
+                data["items"][videoIndex]["snippet"]["description"]
+              )
+            ) {
               this.thaiContent = true;
               this.favorite.language = "TH";
               this.thai = "TH";
@@ -193,11 +325,19 @@ export default {
         .then((data) => {
           JSON.stringify(data);
 
-          this.videoArr[videoIndex].views = parseInt(data["items"][0]["statistics"]["viewCount"]);
-          this.videoArr[videoIndex].likes = parseInt(data["items"][0]["statistics"]["likeCount"]);
+          this.videoArr[videoIndex].views = parseInt(
+            data["items"][0]["statistics"]["viewCount"]
+          );
+          this.videoArr[videoIndex].likes = parseInt(
+            data["items"][0]["statistics"]["likeCount"]
+          );
 
-          this.totalView = this.totalView + parseInt(data["items"][0]["statistics"]["viewCount"]);
-          this.totalLike = this.totalLike + parseInt(data["items"][0]["statistics"]["likeCount"]);
+          this.totalView =
+            this.totalView +
+            parseInt(data["items"][0]["statistics"]["viewCount"]);
+          this.totalLike =
+            this.totalLike +
+            parseInt(data["items"][0]["statistics"]["likeCount"]);
 
           this.searchChannel(
             data["items"][0]["snippet"]["channelId"],
@@ -214,8 +354,10 @@ export default {
         })
         .then((data) => {
           JSON.stringify(data);
-          this.videoArr[videoIndex].channelTitle = data["items"][0]["snippet"]["title"];
-          this.videoArr[videoIndex].channelThumbnail = data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
+          this.videoArr[videoIndex].channelTitle =
+            data["items"][0]["snippet"]["title"];
+          this.videoArr[videoIndex].channelThumbnail =
+            data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
         });
     },
     handleSubmitBookmark(){
@@ -238,82 +380,122 @@ export default {
 </script>
 
 <style scoped>
-.sidenav {
-  height: 100%;
-  width: 500px;
-  position: fixed;
-  z-index: 1;
-  top: 90px;
-  left: 0;
-  background-color: #ffffff;
-  overflow-x: hidden;
-  padding-top: 20px;
+@media screen and (max-width: 576px) {
+  .playlist-info {
+    display: none;
+  }
+  .medium-playlist-header {
+    display: none;
+  }
+  .small-playlist-header {
+    display: block;
+  }
 }
-/* .sidenav a {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  color: #818181;
-  display: block;
-} */
-/* .sidenav a:hover {
-  color: #f1f1f1;
-} */
-.main {
-  padding-top: 100px;
-  margin-left: 500px;
-  min-height: 100vh;
-  padding: 10px;
+@media screen and (min-width: 576px) {
+  .medium-playlist-header {
+    display: block;
+  }
+  .small-playlist-header {
+    display: none;
+  }
 }
-.video {
-  display: flex;
-  background-color: white;
-  margin-bottom: 10px;
-  padding: 10px;
-  box-shadow: 3px 3px 3px #cccccc;
+/* Small devices (tablets, 540px and up) */
+@media screen and (max-width: 768px) {
+  .video-description {
+    display: none;
+  }
+  .video-stat {
+    margin-left: 40px;
+  }
+  .video-title p {
+    font-size: 54px;
+  }
 }
-.video-info {
-  margin-left: 10px;
+
+/* Medium devices (desktops, 992px and up) */
+@media screen and (max-width: 992px) {
 }
-.video-info p {
-  margin: 0;
-}
-.video-name {
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 28px;
-}
-.video-view {
-  font-style: normal;
-  font-weight: 200;
-  font-size: 14px;
-}
-.video-des {
-  font-style: normal;
-  font-weight: 200;
-  font-size: 12px;
-  line-height: 21px;
+
+/* Large devices (large desktops, 1200px and up) */
+@media screen and (max-width: 1200px) {
 }
 .video-channel {
-  margin-top: 5px;
   display: flex;
   align-items: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.video-channel .channel-thumbnail {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+.video-channel .channel-name {
+  margin: 0;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.video-stat {
+  display: flex;
+  align-items: center;
+}
+.video-stat p {
+  margin: 0;
+  font-size: 12px;
+}
+.video-stat .video-stat-likes {
+  margin-left: 20px;
+}
+.video-description p {
+  margin: 0;
+  width: 100%;
+  height: 100px;
+  overflow-y: auto;
+  overflow-x: auto;
+  font-size: 12px;
+}
+
+.video-title p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.con {
+  padding: 10px;
+}
+.iframe {
+  padding: 0;
+  margin: 0;
 }
 .playlist-stat p {
   margin: 0;
 }
-.thumbnail {
-  min-width: 367px;
-  min-height: 205px;
-}
-.channel-thumbnail {
-  border-radius: 50%;width:40px;height:40px;border: 0.5px solid #cccccc;
-  margin-right: 10px;
-}
-.loadMore-button {
+.loadMore-btn {
   height: 50px;
   width: 100%;
   border: 0.5px solid rgb(100, 100, 100);
   color: rgb(100, 100, 100);
+  background-color: white;
 }
+.small-playlist-header {
+  background-color: #444444;
+}
+.medium-playlist-header {
+  background-color: #444444;
+}
+.small-playlist-header p {
+  color: white;
+}
+.medium-playlist-header p {
+  color: white;
+}
+.small-playlist-header h1{
+  color: white;
+}
+.medium-playlist-header h1{
+  color: white;
+}
+
 </style>

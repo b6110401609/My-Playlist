@@ -13,7 +13,7 @@ const routes = [
   {
     path: "/my-playlist/",
     name: "home",
-    component: CreateComponent,
+    component: NormalSearch,
     meta: {
       title: 'My Playlist'
     }
@@ -60,12 +60,9 @@ const routes = [
     }
   },
   {
-    path: "/search",
-    name: "search",
-    component: NormalSearch,
-    meta: {
-      title: 'My Playlist | Search'
-    }
+    path: "/about",
+    name: "about",
+    component: CreateComponent,
   },
   {
     path: "/favorite",
