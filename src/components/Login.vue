@@ -1,27 +1,72 @@
 <template>
-<h1>.</h1>
-<h1>Sign in</h1>
-<p><input type="text" placeholder="Email" v-model="email"/></p>
-<p><input type="password" placeholder="Password" v-model="password"/></p>
-<p v-if="errMsg">{{ errMsg }}</p>
-<p><button @click="register">Submit</button></p>
-
+  <div
+    style="
+      margin: auto;
+      max-width: 400px;
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-top: 50px;
+    "
+  >
+    <h2 style="margin-bottom: 20px">Sign in</h2>
+    <p>
+      <input
+        type="text"
+        placeholder="Email"
+        v-model="email"
+        style="
+          width: 100%;
+          border-radius: 50px;
+          background-color: rgb(240, 240, 240);
+          border: none;
+          height: 40px;
+          padding-left: 20px;
+        "
+      />
+    </p>
+    <p>
+      <input
+        type="password"
+        placeholder="Password"
+        v-model="password"
+        style="
+          width: 100%;
+          border-radius: 50px;
+          background-color: rgb(240, 240, 240);
+          border: none;
+          height: 40px;
+          padding-left: 20px;
+        "
+      />
+    </p>
+    <p v-if="errMsg">{{ errMsg }}</p>
+    <p style="display: flex; justify-content: center">
+      <button
+        type="button"
+        class="btn btn-primary"
+        style="width: 100%; border-radius: 50px"
+        @click="register"
+      >
+        Login
+      </button>
+    </p>
+  </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth" 
-import { useRouter } from 'vue-router'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "vue-router";
 const email = ref("");
 const password = ref("");
-const router = useRouter()
-const errMsg = ref()
+const router = useRouter();
+const errMsg = ref();
 const register = () => {
-  const auth = getAuth()
+  const auth = getAuth();
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((data) => {
       console.log("Successfully sign in");
-      router.push('/my-playlist/')
+      router.push("/my-playlist/");
     })
     .catch((error) => {
       console.log(error.code);
@@ -34,7 +79,7 @@ const register = () => {
           break;
         case "auth/user-not-found":
           errMsg.value = "No account with that email was found";
-          break; 
+          break;
         default:
           errMsg.value = "Email or Password was incorrect";
           break;
@@ -44,5 +89,4 @@ const register = () => {
 </script>
 
 <style>
-
 </style>

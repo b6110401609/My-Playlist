@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3 advance-search-des">search word</div>
+        <div class="col-md-3 advance-search-des">search word <span style="color:red">*</span> </div>
         <div class="col-md-5 advance-search-des">
           <input
             type="text"
@@ -23,6 +23,7 @@
             placeholder="search"
             v-model="searchWord"
             required
+            @keyup.enter="getPlaylistID"
           />
         </div>
         <div class="col-md-4 hide-col-search advance-search-des">
@@ -30,7 +31,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-3 advance-search-des">API key</div>
+        <div class="col-md-3 advance-search-des">API key <span style="color:red">*</span> </div>
         <div class="col-md-5 advance-search-des">
           <input
             type="text"
@@ -39,6 +40,7 @@
             placeholder="API key"
             v-model="apiKey"
             required
+            @keyup.enter="getPlaylistID"
           />
         </div>
         <div class="col-md-4 hide-col-search advance-search-des">
@@ -108,6 +110,7 @@
             id="flexCheckDefault"
             style="width: 20px; height: 20px; margin: 0"
             v-model="onlyTH"
+            @keyup.enter="getPlaylistID"
           />
         </div>
         <div class="col-md-4 hide-col-search advance-search-des"></div>
@@ -309,6 +312,7 @@ export default {
       orderBy: "",
       maxResault: "",
       playlistArr: [],
+      playlistIdArr: [],
       onlyTH: false,
     };
   },
@@ -318,70 +322,143 @@ export default {
       $("#not_match").hide();
       console.log(this.searchWord, this.orderBy, this.maxResault, this.apiKey);
       this.playlistArr = [];
-      if (
-        this.searchWord.trim() != "" &&
-        this.apiKey != "" &&
-        this.orderBy != "" &&
-        this.maxResault != ""
-      ) {
+      this.playlistIdArr = [];
+      if (this.searchWord.trim() != "" && this.apiKey != "") {
         $("#validationDefault01").css("background-color", "#FFF");
         $("#validationDefault02").css("background-color", "#FFF");
         $("#validationDefault03").css("background-color", "#FFF");
         $("#validationDefault04").css("background-color", "#FFF");
-        fetch(
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
-            this.apiKey
-          }&maxResults=${
-            this.maxResault
-          }&type=playlist&relevanceLanguage=th&order=${
-            this.orderBy
-          }&regionCode=TH`
-        )
-          .then((response) => {
-            console.log(response.status);
-            if (response.status != 200) {
-              alert("API key error");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            JSON.stringify(data);
-            const REGEX_TH = /[ก-๙]/;
-            for (var playlistIndex in data["items"]) {
-              if (this.onlyTH) {
-                if (
-                  REGEX_TH.test(
-                    data["items"][playlistIndex]["snippet"]["title"]
-                  ) ||
-                  REGEX_TH.test(
-                    data["items"][playlistIndex]["snippet"]["description"]
-                  )
-                ) {
-                  this.playlistArr.push({
-                    playlistTitle:
-                      data["items"][playlistIndex]["snippet"]["title"],
-                    playlistPublish: data["items"][playlistIndex]["snippet"][
-                      "publishedAt"
-                    ].substring(0, 10),
-                    playlistThumbnail:
-                      data["items"][playlistIndex]["snippet"]["thumbnails"][
-                        "medium"
-                      ]["url"],
-                    index: parseInt(playlistIndex) + 1,
-                    playlistId:
-                      data["items"][playlistIndex]["id"]["playlistId"],
-                    videos: [],
-                    sumViewCount: 0,
-                    sumLikeCount: 0,
-                    TH: false,
-                  });
-                  this.getVideoID(
-                    data["items"][playlistIndex]["id"]["playlistId"],
-                    this.playlistArr.length - 1
-                  );
-                }
-              }
-              if (!this.onlyTH) {
+        if (this.maxResault == "") {
+          this.maxResault = "10";
+        }
+        if (this.orderBy == "") {
+          this.orderBy = "rating";
+        }
+        this.spacialCaseSearch();
+        // fetch(
+        //   `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
+        //     this.apiKey
+        //   }&maxResults=${
+        //     this.maxResault
+        //   }&type=playlist&relevanceLanguage=th&order=${
+        //     this.orderBy
+        //   }&regionCode=TH`
+        // )
+        // .then((response) => {
+        //   if (response.status != 200) {
+        //     alert("API key error");
+        //   }
+        //   return response.json();
+        // });
+        // .then((data) => {
+        //   JSON.stringify(data);
+        //   const REGEX_TH = /[ก-๙]/;
+        //   for (var playlistIndex in data["items"]) {
+        //     if (this.onlyTH) {
+        //       if (
+        //         REGEX_TH.test(
+        //           data["items"][playlistIndex]["snippet"]["title"]
+        //         ) ||
+        //         REGEX_TH.test(
+        //           data["items"][playlistIndex]["snippet"]["description"]
+        //         )
+        //       ) {
+        //         this.playlistArr.push({
+        //           playlistTitle:
+        //             data["items"][playlistIndex]["snippet"]["title"],
+        //           playlistPublish: data["items"][playlistIndex]["snippet"][
+        //             "publishedAt"
+        //           ].substring(0, 10),
+        //           playlistThumbnail:
+        //             data["items"][playlistIndex]["snippet"]["thumbnails"][
+        //               "medium"
+        //             ]["url"],
+        //           index: parseInt(playlistIndex) + 1,
+        //           playlistId:
+        //             data["items"][playlistIndex]["id"]["playlistId"],
+        //           videos: [],
+        //           sumViewCount: 0,
+        //           sumLikeCount: 0,
+        //           TH: false,
+        //         });
+        //         this.getVideoID(
+        //           data["items"][playlistIndex]["id"]["playlistId"],
+        //           this.playlistArr.length - 1
+        //         );
+        //       }
+        //     }
+        //     if (!this.onlyTH) {
+        //       this.playlistArr.push({
+        //         playlistTitle:
+        //           data["items"][playlistIndex]["snippet"]["title"],
+        //         playlistPublish: data["items"][playlistIndex]["snippet"][
+        //           "publishedAt"
+        //         ].substring(0, 10),
+        //         playlistThumbnail:
+        //           data["items"][playlistIndex]["snippet"]["thumbnails"][
+        //             "medium"
+        //           ]["url"],
+        //         index: parseInt(playlistIndex) + 1,
+        //         playlistId: data["items"][playlistIndex]["id"]["playlistId"],
+        //         videos: [],
+        //         sumViewCount: 0,
+        //         sumLikeCount: 0,
+        //         TH: false,
+        //       });
+        //       this.getVideoID(
+        //         data["items"][playlistIndex]["id"]["playlistId"],
+        //         this.playlistArr.length - 1
+        //       );
+        //     }
+        //   }
+        //   if (this.playlistArr.length == 0) {
+        //     $("#not_match").show();
+        //   }
+        // });
+      } else {
+        alert("invalid data");
+        if (this.searchWord.trim() == "") {
+          $("#validationDefault01").css("background-color", "#FFFCDC");
+        }
+        if (this.apiKey == "") {
+          $("#validationDefault02").css("background-color", "#FFFCDC");
+        }
+      }
+    },
+    spacialCaseSearch(nextPagePlaylist) {
+      var html = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
+        this.apiKey
+      }&maxResults=50&type=playlist&relevanceLanguage=th&order=${
+        this.orderBy
+      }&regionCode=TH`;
+      if (nextPagePlaylist != null) {
+        html = html + `&pageToken=${nextPagePlaylist}`;
+      }
+      fetch(html)
+        .then((response) => {
+          if (response.status != 200) {
+            alert("API key error");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          JSON.stringify(data);
+          const REGEX_TH = /[ก-๙]/;
+          for (var playlistIndex in data["items"]) {
+            if (
+              this.onlyTH &&
+              !this.playlistIdArr.includes(
+                data["items"][playlistIndex]["id"]["playlistId"]
+              )
+            ) {
+              if (
+                REGEX_TH.test(
+                  data["items"][playlistIndex]["snippet"]["title"]
+                ) ||
+                REGEX_TH.test(
+                  data["items"][playlistIndex]["snippet"]["description"]
+                )
+              ) {
                 this.playlistArr.push({
                   playlistTitle:
                     data["items"][playlistIndex]["snippet"]["title"],
@@ -392,39 +469,66 @@ export default {
                     data["items"][playlistIndex]["snippet"]["thumbnails"][
                       "medium"
                     ]["url"],
-                  index: parseInt(playlistIndex) + 1,
+                  index: parseInt(this.playlistArr.length) + 1,
                   playlistId: data["items"][playlistIndex]["id"]["playlistId"],
                   videos: [],
                   sumViewCount: 0,
                   sumLikeCount: 0,
                   TH: false,
                 });
+                this.playlistIdArr.push(
+                  data["items"][playlistIndex]["id"]["playlistId"]
+                );
                 this.getVideoID(
                   data["items"][playlistIndex]["id"]["playlistId"],
                   this.playlistArr.length - 1
                 );
               }
             }
-            if (this.playlistArr.length == 0 && this.onlyTH) {
-              // alert("Not Have")
-              $("#not_match").show();
+            if (
+              !this.onlyTH &&
+              !this.playlistIdArr.includes(
+                data["items"][playlistIndex]["id"]["playlistId"]
+              )
+            ) {
+              this.playlistArr.push({
+                playlistTitle: data["items"][playlistIndex]["snippet"]["title"],
+                playlistPublish: data["items"][playlistIndex]["snippet"][
+                  "publishedAt"
+                ].substring(0, 10),
+                playlistThumbnail:
+                  data["items"][playlistIndex]["snippet"]["thumbnails"][
+                    "medium"
+                  ]["url"],
+                index: parseInt(this.playlistArr.length) + 1,
+                playlistId: data["items"][playlistIndex]["id"]["playlistId"],
+                videos: [],
+                sumViewCount: 0,
+                sumLikeCount: 0,
+                TH: false,
+              });
+              this.playlistIdArr.push(
+                data["items"][playlistIndex]["id"]["playlistId"]
+              );
+              this.getVideoID(
+                data["items"][playlistIndex]["id"]["playlistId"],
+                this.playlistArr.length - 1
+              );
             }
-          });
-      } else {
-        alert("invalid data");
-        if (this.searchWord.trim() == "") {
-          $("#validationDefault01").css("background-color", "#FFFCDC");
-        }
-        if (this.orderBy == "") {
-          $("#validationDefault02").css("background-color", "#FFFCDC");
-        }
-        if (this.apiKey == "") {
-          $("#validationDefault03").css("background-color", "#FFFCDC");
-        }
-        if (this.maxResault == "") {
-          $("#validationDefault04").css("background-color", "#FFFCDC");
-        }
-      }
+            if (this.playlistArr.length == this.maxResault) {
+              break;
+            }
+          }
+          if (
+            data["nextPageToken"] != null &&
+            this.playlistArr.length < this.maxResault
+          ) {
+            this.spacialCaseSearch(data["nextPageToken"]);
+          }
+          if (data["nextPageToken"] == null && this.playlistArr.length == 0) {
+            $("#not_match").show();
+          }
+        });
     },
     getVideoID(playlistId, playlistIndex, nextPageToken) {
       var html = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&key=${this.apiKey}&playlistId=${playlistId}&maxResults=50`;
@@ -501,16 +605,16 @@ export default {
         this.playlistArr[playlistIndex].videos[
           videoIndex
         ].videoInfo[0].likeCount;
-      if (
-        this.playlistArr[playlistIndex].videos[videoIndex].videoInfo[0].titleTH
-      ) {
-        this.playlistArr[playlistIndex].sumTitleTH += 1;
-      }
-      if (
-        this.playlistArr[playlistIndex].videos[videoIndex].videoInfo[0].desTH
-      ) {
-        this.playlistArr[playlistIndex].sumDesTH += 1;
-      }
+      // if (
+      //   this.playlistArr[playlistIndex].videos[videoIndex].videoInfo[0].titleTH
+      // ) {
+      //   this.playlistArr[playlistIndex].sumTitleTH += 1;
+      // }
+      // if (
+      //   this.playlistArr[playlistIndex].videos[videoIndex].videoInfo[0].desTH
+      // ) {
+      //   this.playlistArr[playlistIndex].sumDesTH += 1;
+      // }
       // this.playlistArr.sort((firstItem, secondItem) => secondItem.sumViewCount - firstItem.sumViewCount);
     },
     sortViews() {

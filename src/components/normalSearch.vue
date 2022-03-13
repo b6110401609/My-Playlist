@@ -25,6 +25,7 @@
       id="fname"
       name="fname"
       v-model="searchWord"
+      @keyup.enter="getPlaylistID"
     />
     <button
       style="
@@ -72,6 +73,7 @@
               class="form-select form-select-sm"
               aria-label=".form-select-sm example"
               v-model="orderBy"
+              @keyup.enter="getPlaylistID"
             >
               <option selected value="rating">rating</option>
               <option value="viewCount">view count</option>
@@ -104,6 +106,7 @@
               id="flexCheckDefault"
               style="width: 20px; height: 20px; margin: 0"
               v-model="onlyTH"
+              @keyup.enter="getPlaylistID"
             />
           </td>
         </tr>
@@ -142,32 +145,35 @@
     </button>
   </div>
   <div style="min-height: 10px; background-color: #f3f3f3"></div>
-  <div style="display: none;" id="not_match">
+  <div style="display: none" id="not_match">
     <div
-    style="display: flex;flex-direction: column;justify-content:center;align-items: center;padding-top:30px"
-    
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="30"
-      fill="currentColor"
-      class="bi bi-exclamation-diamond"
-      viewBox="0 0 16 16"
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-top: 30px;
+      "
     >
-      <path
-        d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"
-      />
-      <path
-        d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"
-      />
-    </svg>
-    <h6 style="">
-      Your search did not match any documents.
-    </h6>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="30"
+        height="30"
+        fill="currentColor"
+        class="bi bi-exclamation-diamond"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"
+        />
+        <path
+          d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"
+        />
+      </svg>
+      <h6 style="">Your search did not match any documents.</h6>
+    </div>
   </div>
-  </div>
-  
+
   <div
     v-for="(playlistArr, i) in playlistArr"
     :key="i"
@@ -241,10 +247,11 @@ export default {
   data() {
     return {
       playlistArr: [],
+      playlistIdArr: [],
       toggle: false,
       orderBy: "",
       maxResault: "",
-      apiKey: "AIzaSyDfDlAABAWzSgZXFZe-YkgE1oprtMyPW5o",
+      apiKey: "AIzaSyBB_b0Ad-qSXNfnbwba9COxvkJcow1sacc",
       searchWord: "",
       onlyTH: false,
     };
@@ -279,67 +286,128 @@ export default {
       $("#not_match").hide();
       if (this.maxResault == "") {
         this.maxResault = "10";
-        console.log("is null");
       }
       if (this.orderBy == "") {
         this.orderBy = "rating";
-        console.log("is null");
       }
       this.playlistArr = [];
+      this.playlistIdArr = [];
       if (this.searchWord != "") {
-        fetch(
-          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
-            this.apiKey
-          }&maxResults=${
-            this.maxResault
-          }&type=playlist&relevanceLanguage=th&order=${
-            this.orderBy
-          }&regionCode=TH`
-        )
-          .then((response) => {
-            if (response.status != 200) {
-              alert("API key error");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            JSON.stringify(data);
-            const REGEX_TH = /[ก-๙]/;
-            for (var playlistIndex in data["items"]) {
-              if (this.onlyTH) {
-                if (
-                  REGEX_TH.test(
-                    data["items"][playlistIndex]["snippet"]["title"]
-                  ) ||
-                  REGEX_TH.test(
-                    data["items"][playlistIndex]["snippet"]["description"]
-                  )
-                ) {
-                  this.havePlaylistTH = true;
-                  this.playlistArr.push({
-                    playlistTitle:
-                      data["items"][playlistIndex]["snippet"]["title"],
-                    playlistId:
-                      data["items"][playlistIndex]["id"]["playlistId"],
-                    playlisDescription:
-                      data["items"][playlistIndex]["snippet"]["description"],
-                    playlistPublish: data["items"][playlistIndex]["snippet"][
-                      "publishedAt"
-                    ].substring(0, 10),
-                    playlistThumbnail:
-                      data["items"][playlistIndex]["snippet"]["thumbnails"][
-                        "medium"
-                      ]["url"],
-                    channelTitle: "",
-                    channelThumbnail: "",
-                  });
-                  this.searchChannel(
-                    data["items"][playlistIndex]["snippet"]["channelId"],
-                    this.playlistArr.length - 1
-                  );
-                }
-              }
-              if (!this.onlyTH) {
+        this.spacialCaseSearch();
+        // fetch(
+        //   `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
+        //     this.apiKey
+        //   }&maxResults=${
+        //     this.maxResault
+        //   }&type=playlist&relevanceLanguage=th&order=${
+        //     this.orderBy
+        //   }&regionCode=TH`
+        // )
+        //   .then((response) => {
+        //     if (response.status != 200) {
+        //       alert("API key error");
+        //     }
+        //     return response.json();
+        //   })
+        //   .then((data) => {
+        //     JSON.stringify(data);
+        //     const REGEX_TH = /[ก-๙]/;
+        //     for (var playlistIndex in data["items"]) {
+        //       if (this.onlyTH) {
+        //         if (
+        //           REGEX_TH.test(
+        //             data["items"][playlistIndex]["snippet"]["title"]
+        //           ) ||
+        //           REGEX_TH.test(
+        //             data["items"][playlistIndex]["snippet"]["description"]
+        //           )
+        //         ) {
+        //           this.havePlaylistTH = true;
+        //           this.playlistArr.push({
+        //             playlistTitle:
+        //               data["items"][playlistIndex]["snippet"]["title"],
+        //             playlistId:
+        //               data["items"][playlistIndex]["id"]["playlistId"],
+        //             playlisDescription:
+        //               data["items"][playlistIndex]["snippet"]["description"],
+        //             playlistPublish: data["items"][playlistIndex]["snippet"][
+        //               "publishedAt"
+        //             ].substring(0, 10),
+        //             playlistThumbnail:
+        //               data["items"][playlistIndex]["snippet"]["thumbnails"][
+        //                 "medium"
+        //               ]["url"],
+        //             channelTitle: "",
+        //             channelThumbnail: "",
+        //           });
+        //           this.searchChannel(
+        //             data["items"][playlistIndex]["snippet"]["channelId"],
+        //             this.playlistArr.length - 1
+        //           );
+        //         }
+        //       }
+        //       if (!this.onlyTH) {
+        //         this.playlistArr.push({
+        //           playlistTitle:
+        //             data["items"][playlistIndex]["snippet"]["title"],
+        //           playlistId: data["items"][playlistIndex]["id"]["playlistId"],
+        //           playlisDescription:
+        //             data["items"][playlistIndex]["snippet"]["description"],
+        //           playlistPublish: data["items"][playlistIndex]["snippet"][
+        //             "publishedAt"
+        //           ].substring(0, 10),
+        //           playlistThumbnail:
+        //             data["items"][playlistIndex]["snippet"]["thumbnails"][
+        //               "medium"
+        //             ]["url"],
+        //           channelTitle: "",
+        //           channelThumbnail: "",
+        //         });
+        //         this.searchChannel(
+        //           data["items"][playlistIndex]["snippet"]["channelId"],
+        //           this.playlistArr.length - 1
+        //         );
+        //       }
+        //     }
+        //     if (this.playlistArr.length < this.maxResault) {
+        //       // alert("Not Have");
+        //       // $("#not_match").show();
+        //       this.playlistArr = [];
+        //       this.spacialCaseSearch();
+        //     }
+        // });
+      } else {
+        alert("type some thing in search box");
+      }
+    },
+
+    spacialCaseSearch(nextPageToken) {
+      var html = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
+        this.apiKey
+      }&maxResults=50&type=playlist&relevanceLanguage=th&order=${
+        this.orderBy
+      }&regionCode=TH`;
+      if (nextPageToken != null) {
+        html = html + `&pageToken=${nextPageToken}`;
+      }
+      fetch(html)
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          JSON.stringify(data);
+          const REGEX_TH = /[ก-๙]/;
+          for (var playlistIndex in data["items"]) {
+            if (this.onlyTH && !this.playlistIdArr.includes(data["items"][playlistIndex]["id"]["playlistId"])) {
+              if (
+                REGEX_TH.test(
+                  data["items"][playlistIndex]["snippet"]["title"]
+                ) ||
+                REGEX_TH.test(
+                  data["items"][playlistIndex]["snippet"]["description"]
+                )
+              ) {
+                this.havePlaylistTH = true;
                 this.playlistArr.push({
                   playlistTitle:
                     data["items"][playlistIndex]["snippet"]["title"],
@@ -356,21 +424,51 @@ export default {
                   channelTitle: "",
                   channelThumbnail: "",
                 });
+                this.playlistIdArr.push(data["items"][playlistIndex]["id"]["playlistId"]);
                 this.searchChannel(
                   data["items"][playlistIndex]["snippet"]["channelId"],
                   this.playlistArr.length - 1
                 );
               }
             }
-            if (this.playlistArr.length == 0 && this.onlyTH) {
-              // alert("Not Have");
-              $("#not_match").show();
+            if (!this.onlyTH && !this.playlistIdArr.includes(data["items"][playlistIndex]["id"]["playlistId"])) {
+              this.playlistArr.push({
+                playlistTitle: data["items"][playlistIndex]["snippet"]["title"],
+                playlistId: data["items"][playlistIndex]["id"]["playlistId"],
+                playlisDescription:
+                  data["items"][playlistIndex]["snippet"]["description"],
+                playlistPublish: data["items"][playlistIndex]["snippet"][
+                  "publishedAt"
+                ].substring(0, 10),
+                playlistThumbnail:
+                  data["items"][playlistIndex]["snippet"]["thumbnails"][
+                    "medium"
+                  ]["url"],
+                channelTitle: "",
+                channelThumbnail: "",
+              });
+              this.playlistIdArr.push(data["items"][playlistIndex]["id"]["playlistId"]);
+              this.searchChannel(
+                data["items"][playlistIndex]["snippet"]["channelId"],
+                this.playlistArr.length - 1
+              );
             }
-          });
-      } else {
-        alert("type some thing in search box");
-      }
+            if (this.playlistArr.length == this.maxResault) {
+              break;
+            }
+          }
+          if (
+            data["nextPageToken"] != null &&
+            this.playlistArr.length < this.maxResault
+          ) {
+            this.spacialCaseSearch(data["nextPageToken"]);
+          }
+          if (data["nextPageToken"] == null && this.playlistArr.length == 0) {
+            $("#not_match").show();
+          }
+        });
     },
+
     searchChannel(channelId, playlistIndex) {
       fetch(
         `https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=${channelId}&key=${this.apiKey}`

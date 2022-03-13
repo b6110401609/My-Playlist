@@ -307,7 +307,7 @@ export default {
             }
             this.searchVideo(
               data["items"][videoIndex]["snippet"]["resourceId"]["videoId"],
-              videoIndex
+              this.videoArr.length - 1
             );
           }
           if (data["nextPageToken"]) {
