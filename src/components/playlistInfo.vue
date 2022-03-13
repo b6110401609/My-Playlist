@@ -97,7 +97,7 @@
           <p>total like {{ totalLike }}</p>
           <p>total video {{ totalVideo }}</p>
         </div>
-        <button type="button" class="btn btn-success btn-sm" v-if="isLoggedIn" @click="handleSubmitBookmark" style="margin-top:5px">Bookmark</button>
+        <button type="button" class="btn btn-success btn-sm" v-if="isLoggedIn" @click="handleSubmitBookmark" style="margin-top:5px">Favorite</button>
       </div>
     </div>
   </div>
