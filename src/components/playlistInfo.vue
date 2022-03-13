@@ -205,7 +205,7 @@ export default {
       thai: "",
       videoArr: [],
       REGEX_TH: /[ก-๙]/,
-      youtubeKey: "AIzaSyDfDlAABAWzSgZXFZe-YkgE1oprtMyPW5o",
+      youtubeKey: "AIzaSyCUR2WhkVG7zIrc5ijHzyVcvtyxMYB198M",
       playlistName: "",
       url:
         "https://www.youtube.com/embed/videoseries?list=" +

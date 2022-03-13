@@ -251,7 +251,7 @@ export default {
       toggle: false,
       orderBy: "",
       maxResault: "",
-      apiKey: "AIzaSyBB_b0Ad-qSXNfnbwba9COxvkJcow1sacc",
+      apiKey: "AIzaSyCUR2WhkVG7zIrc5ijHzyVcvtyxMYB198M",
       searchWord: "",
       onlyTH: false,
     };
