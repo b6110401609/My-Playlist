@@ -312,9 +312,10 @@ export default {
       toggle: false,
       orderBy: "",
       maxResault: "",
-      apiKey: "AIzaSyAjON-G8L1aj0EYprmmT8zGu6Vob1gCxtY",
+      apiKey: "AIzaSyDLTVVua6frOq6RmspTcGk2p7PSSmtiALA",
       searchWord: "",
       onlyTH: false,
+      orderCheck: false,
     };
   },
   methods: {
@@ -369,6 +370,7 @@ export default {
       });
     },
     getPlaylistID() {
+      const REGEX_TH = /[ก-๙]/;
       $(".icon").hide();
       $("#not_match").hide();
       if (this.maxResault == "") {
@@ -381,6 +383,30 @@ export default {
       this.playlistIdArr = [];
       if (this.searchWord != "") {
         this.spacialCaseSearch();
+        fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
+            this.apiKey
+          }&maxResults=${
+            this.maxResault
+          }&type=playlist&relevanceLanguage=th&order=${
+            this.orderBy
+          }&regionCode=TH`
+        )
+          .then((response) => {
+            if (response.status != 200) {
+              alert("API key error");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            JSON.stringify(data);
+            if (data["items"].length > 0) {
+              this.orderCheck = true;
+            }
+            if (data["items"].length == 0) {
+              this.orderCheck = false;
+            }
+          });
         // fetch(
         //   `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
         //     this.apiKey
@@ -471,9 +497,10 @@ export default {
     spacialCaseSearch(nextPageToken) {
       var html = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
         this.apiKey
-      }&maxResults=50&type=playlist&relevanceLanguage=th&regionCode=TH&order=${
-        this.orderBy
-      }`;
+      }&maxResults=50&type=playlist&relevanceLanguage=th&regionCode=TH`;
+      if (this.orderCheck) {
+        html = html + `&order=${this.orderBy}`;
+      }
       if (nextPageToken != null) {
         html = html + `&pageToken=${nextPageToken}`;
       }
