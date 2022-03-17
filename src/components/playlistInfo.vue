@@ -187,8 +187,24 @@ export default {
     const isLoggedIn = false
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        this.isLoggedIn = true;
         this.favorite.userEmail = user.email
+        axios.get('http://localhost:4000/api')
+        .then((response) => {
+        const email = user.email
+        const pId = this.$route.params.id
+        for (let i = 0; i < response.data.length; i++) {
+          if (email == response.data[i].userEmail && pId == response.data[i].playlistId){
+            this.isLoggedIn = false;
+            break;
+          }
+          else {
+            this.isLoggedIn = true;
+          }
+        }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
       } else {
         this.isLoggedIn = false;
       }
