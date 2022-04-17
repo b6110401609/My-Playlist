@@ -124,9 +124,7 @@
                 ></span>
                 <ul>
                   <li>
-                    <span style="font-weight: 700">rating</span> - This filter
-                    will measure how the video quality was before you see. Means
-                    good video gather good response by up like or positive like.
+                    <span style="font-weight: 700">rating</span> - This filter will measure how the video quality was before you see. by up like or positive like
                   </li>
                   <li>
                     <span style="font-weight: 700">video count</span> - Channels
