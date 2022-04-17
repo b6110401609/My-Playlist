@@ -29,43 +29,46 @@
       </div>
       <div class="col-sm-12">
         <div class="playlist-stat">
-          <p>total view {{ totalView }}</p>
-          <p>total like {{ totalLike }}</p>
-          <p>total video {{ totalVideo }}</p>
+          <p>total views {{ totalView.toLocaleString() }}</p>
+          <p>total like {{ totalLike.toLocaleString() }}</p>
+          <p>total video {{ totalVideo.toLocaleString() }}</p>
         </div>
-        <button type="button" class="btn btn-success btn-sm" v-if="isLoggedIn" @click="handleSubmitBookmark" style="margin-top:5px">Bookmark</button>
-      </div>
-    </div>
-    <div class="col-sm-12" style="display:flex;justify-content:center;">
         <button
-          id="show_more"
-          style="
-            border: none;
-            background: none;
-            padding: 0px;
-            color: white
-          "
+          type="button"
+          class="btn btn-success btn-sm"
+          v-if="isLoggedIn"
+          @click="handleSubmitBookmark"
+          style="margin-top: 5px"
         >
-          show more information
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-chevron-double-down"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-            />
-            <path
-              fill-rule="evenodd"
-              d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-            />
-          </svg>
+          Bookmark
         </button>
       </div>
+    </div>
+    <div class="col-sm-12" style="display: flex; justify-content: center">
+      <button
+        id="show_more"
+        style="border: none; background: none; padding: 0px; color: white"
+      >
+        show more information
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-chevron-double-down"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+          <path
+            fill-rule="evenodd"
+            d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
   <div class="con medium-playlist-header">
     <div class="row">
@@ -93,16 +96,24 @@
           </span>
         </h1>
         <div class="playlist-stat">
-          <p>total view {{ totalView }}</p>
-          <p>total like {{ totalLike }}</p>
-          <p>total video {{ totalVideo }}</p>
+          <p>total view {{ totalView.toLocaleString() }}</p>
+          <p>total like {{ totalLike.toLocaleString() }}</p>
+          <p>total video {{ totalVideo.toLocaleString() }}</p>
         </div>
-        <button type="button" class="btn btn-success btn-sm" v-if="isLoggedIn" @click="handleSubmitBookmark" style="margin-top:5px">Favorite</button>
+        <button
+          type="button"
+          class="btn btn-success btn-sm"
+          v-if="isLoggedIn"
+          @click="handleSubmitBookmark"
+          style="margin-top: 5px"
+        >
+          Favorite
+        </button>
       </div>
     </div>
   </div>
   <div style="min-height: 10px; background-color: #f3f3f3"></div>
-  <div class="con" style="padding:0">
+  <div class="con" style="padding: 0">
     <div
       class="row"
       v-for="(videoArr, i) in videosLoaded"
@@ -141,8 +152,12 @@
           <p class="channel-name">{{ this.videoArr[i].channelTitle }}</p>
         </div>
         <div class="video-stat">
-          <p class="video-stat-views">{{ this.videoArr[i].views }} views</p>
-          <p class="video-stat-likes">{{ this.videoArr[i].likes }} likes</p>
+          <p class="video-stat-views">
+            {{ this.videoArr[i].views.toLocaleString() }} views
+          </p>
+          <p class="video-stat-likes">
+            {{ this.videoArr[i].likes.toLocaleString() }} likes
+          </p>
         </div>
         <div class="video-description">
           <p>{{ this.videoArr[i].description }}</p>
@@ -150,12 +165,20 @@
       </div>
     </div>
     <div style="min-height: 10px; background-color: #f3f3f3"></div>
-    <div v-if="seen" class="row" style="padding-bottom: 10px;
+    <div
+      v-if="seen"
+      class="row"
+      style="
+        padding-bottom: 10px;
         padding-top: 10px;
         margin-left: 0px;
-        margin-right: 0px;">
+        margin-right: 0px;
+      "
+    >
       <div class="col">
-        <button class="loadMore-btn" @click="loadMore" v-if="seen">load more</button>
+        <button class="loadMore-btn" @click="loadMore" v-if="seen">
+          load more
+        </button>
       </div>
     </div>
     <div style="min-height: 20px; background-color: #f3f3f3"></div>
@@ -178,33 +201,37 @@ export default {
       .then((data) => {
         JSON.stringify(data);
         this.playlistName = data["items"][0]["snippet"]["localized"]["title"];
-        this.favorite.playlistTitle = data["items"][0]["snippet"]["localized"]["title"];
+        this.favorite.playlistTitle =
+          data["items"][0]["snippet"]["localized"]["title"];
 
         this.searchPlaylist();
         this.click();
       });
     let auth = getAuth();
-    const isLoggedIn = false
+    const isLoggedIn = false;
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        this.favorite.userEmail = user.email
-        axios.get('http://localhost:4000/api')
-        .then((response) => {
-        const email = user.email
-        const pId = this.$route.params.id
-        for (let i = 0; i < response.data.length; i++) {
-          if (email == response.data[i].userEmail && pId == response.data[i].playlistId){
-            this.isLoggedIn = false;
-            break;
-          }
-          else {
-            this.isLoggedIn = true;
-          }
-        }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+        this.favorite.userEmail = user.email;
+        axios
+          .get("http://localhost:4000/api")
+          .then((response) => {
+            const email = user.email;
+            const pId = this.$route.params.id;
+            for (let i = 0; i < response.data.length; i++) {
+              if (
+                email == response.data[i].userEmail &&
+                pId == response.data[i].playlistId
+              ) {
+                this.isLoggedIn = false;
+                break;
+              } else {
+                this.isLoggedIn = true;
+              }
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
         this.isLoggedIn = false;
       }
@@ -221,7 +248,7 @@ export default {
       thai: "",
       videoArr: [],
       REGEX_TH: /[ก-๙]/,
-      youtubeKey: "AIzaSyDLTVVua6frOq6RmspTcGk2p7PSSmtiALA",
+      youtubeKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
       playlistName: "",
       url:
         "https://www.youtube.com/embed/videoseries?list=" +
@@ -230,8 +257,8 @@ export default {
         playlistId: this.$route.params.id,
         playlistTitle: "",
         userEmail: "",
-        language: ""
-      }
+        language: "",
+      },
     };
   },
   computed: {
@@ -316,8 +343,7 @@ export default {
               this.thaiContent = true;
               this.favorite.language = "TH";
               this.thai = "TH";
-            }
-            else if (this.thaiContent == false){
+            } else if (this.thaiContent == false) {
               this.favorite.language = "NA";
               this.thai = "NA";
             }
@@ -347,13 +373,18 @@ export default {
           this.videoArr[videoIndex].likes = parseInt(
             data["items"][0]["statistics"]["likeCount"]
           );
+          var view = data["items"][0]["statistics"]["viewCount"];
+          var like = data["items"][0]["statistics"]["likeCount"];
 
-          this.totalView =
-            this.totalView +
-            parseInt(data["items"][0]["statistics"]["viewCount"]);
-          this.totalLike =
-            this.totalLike +
-            parseInt(data["items"][0]["statistics"]["likeCount"]);
+          if (isNaN(view)) {
+            view = 0;
+          }
+          if (isNaN(like)) {
+            like = 0;
+          }
+
+          this.totalView = this.totalView + parseInt(view);
+          this.totalLike = this.totalLike + parseInt(like);
 
           this.searchChannel(
             data["items"][0]["snippet"]["channelId"],
@@ -376,21 +407,24 @@ export default {
             data["items"][0]["snippet"]["thumbnails"]["default"]["url"];
         });
     },
-    handleSubmitBookmark(){
-      let apiURL = 'http://localhost:4000/api/create-favorite'; 
+    handleSubmitBookmark() {
+      let apiURL = "http://localhost:4000/api/create-favorite";
 
-      axios.post(apiURL, this.favorite).then(() => {
-        this.$router.push("/favorite")
-        this.favorite = {
-          playlistId: "",
-          playlistTitle: "",
-          userId: "",
-          language: ""
-        }
-      }).catch(error => {
-        console.log(error)
-      })
-    }
+      axios
+        .post(apiURL, this.favorite)
+        .then(() => {
+          this.$router.push("/favorite");
+          this.favorite = {
+            playlistId: "",
+            playlistTitle: "",
+            userId: "",
+            language: "",
+          };
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
@@ -507,11 +541,10 @@ export default {
 .medium-playlist-header p {
   color: white;
 }
-.small-playlist-header h1{
+.small-playlist-header h1 {
   color: white;
 }
-.medium-playlist-header h1{
+.medium-playlist-header h1 {
   color: white;
 }
-
 </style>

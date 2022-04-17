@@ -77,7 +77,7 @@
               @keyup.enter="getPlaylistID"
             >
               <option selected value="rating">rating</option>
-              <option value="viewCount">view count</option>
+              <option value="date">date</option>
               <option value="videoCount">video count</option>
             </select>
           </td>
@@ -124,8 +124,9 @@
                 ></span>
                 <ul>
                   <li>
-                    <span style="font-weight: 700">rating</span> - Resources are
-                    sorted from highest to lowest rating.
+                    <span style="font-weight: 700">rating</span> - This filter
+                    will measure how the video quality was before you see. Means
+                    good video gather good response by up like or positive like.
                   </li>
                   <li>
                     <span style="font-weight: 700">video count</span> - Channels
@@ -135,6 +136,11 @@
                   <li>
                     <span style="font-weight: 700">view count</span> - Resources
                     are sorted from highest to lowest number of views.
+                  </li>
+                  <li>
+                    <span style="font-weight: 700">date</span> - Resources are
+                    sorted in reverse chronological order based on the date they
+                    were created.
                   </li>
                 </ul>
               </div>
@@ -312,10 +318,9 @@ export default {
       toggle: false,
       orderBy: "",
       maxResault: "",
-      apiKey: "AIzaSyDLTVVua6frOq6RmspTcGk2p7PSSmtiALA",
+      apiKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
       searchWord: "",
       onlyTH: false,
-      orderCheck: false,
     };
   },
   methods: {
@@ -400,107 +405,18 @@ export default {
           })
           .then((data) => {
             JSON.stringify(data);
-            if (data["items"].length > 0) {
-              this.orderCheck = true;
-            }
-            if (data["items"].length == 0) {
-              this.orderCheck = false;
-            }
           });
-        // fetch(
-        //   `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
-        //     this.apiKey
-        //   }&maxResults=${
-        //     this.maxResault
-        //   }&type=playlist&relevanceLanguage=th&order=${
-        //     this.orderBy
-        //   }&regionCode=TH`
-        // )
-        //   .then((response) => {
-        //     if (response.status != 200) {
-        //       alert("API key error");
-        //     }
-        //     return response.json();
-        //   })
-        //   .then((data) => {
-        //     JSON.stringify(data);
-        //     const REGEX_TH = /[ก-๙]/;
-        //     for (var playlistIndex in data["items"]) {
-        //       if (this.onlyTH) {
-        //         if (
-        //           REGEX_TH.test(
-        //             data["items"][playlistIndex]["snippet"]["title"]
-        //           ) ||
-        //           REGEX_TH.test(
-        //             data["items"][playlistIndex]["snippet"]["description"]
-        //           )
-        //         ) {
-        //           this.havePlaylistTH = true;
-        //           this.playlistArr.push({
-        //             playlistTitle:
-        //               data["items"][playlistIndex]["snippet"]["title"],
-        //             playlistId:
-        //               data["items"][playlistIndex]["id"]["playlistId"],
-        //             playlisDescription:
-        //               data["items"][playlistIndex]["snippet"]["description"],
-        //             playlistPublish: data["items"][playlistIndex]["snippet"][
-        //               "publishedAt"
-        //             ].substring(0, 10),
-        //             playlistThumbnail:
-        //               data["items"][playlistIndex]["snippet"]["thumbnails"][
-        //                 "medium"
-        //               ]["url"],
-        //             channelTitle: "",
-        //             channelThumbnail: "",
-        //           });
-        //           this.searchChannel(
-        //             data["items"][playlistIndex]["snippet"]["channelId"],
-        //             this.playlistArr.length - 1
-        //           );
-        //         }
-        //       }
-        //       if (!this.onlyTH) {
-        //         this.playlistArr.push({
-        //           playlistTitle:
-        //             data["items"][playlistIndex]["snippet"]["title"],
-        //           playlistId: data["items"][playlistIndex]["id"]["playlistId"],
-        //           playlisDescription:
-        //             data["items"][playlistIndex]["snippet"]["description"],
-        //           playlistPublish: data["items"][playlistIndex]["snippet"][
-        //             "publishedAt"
-        //           ].substring(0, 10),
-        //           playlistThumbnail:
-        //             data["items"][playlistIndex]["snippet"]["thumbnails"][
-        //               "medium"
-        //             ]["url"],
-        //           channelTitle: "",
-        //           channelThumbnail: "",
-        //         });
-        //         this.searchChannel(
-        //           data["items"][playlistIndex]["snippet"]["channelId"],
-        //           this.playlistArr.length - 1
-        //         );
-        //       }
-        //     }
-        //     if (this.playlistArr.length < this.maxResault) {
-        //       // alert("Not Have");
-        //       // $("#not_match").show();
-        //       this.playlistArr = [];
-        //       this.spacialCaseSearch();
-        //     }
-        // });
       } else {
-        alert("!!! WARNING !!!\n\nHeader\n\u2022Point1\n\u2022Point2");
+        alert("Type something in search box.");
       }
     },
 
     spacialCaseSearch(nextPageToken) {
       var html = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
         this.apiKey
-      }&maxResults=50&type=playlist&relevanceLanguage=th&regionCode=TH`;
-      if (this.orderCheck) {
-        html = html + `&order=${this.orderBy}`;
-      }
+      }&maxResults=${
+        this.maxResault
+      }&type=playlist&relevanceLanguage=th&order=${this.orderBy}&regionCode=TH`;
       if (nextPageToken != null) {
         html = html + `&pageToken=${nextPageToken}`;
       }
@@ -739,17 +655,6 @@ export default {
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 }
-
-/* Modal Content */
-/* .modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 90%;
-} */
-
-/* The Close Button */
 .close {
   display: flex;
   justify-content: flex-end;

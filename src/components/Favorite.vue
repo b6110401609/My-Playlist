@@ -1,7 +1,7 @@
 <template>
   <div class="search-bar" style="">
     <button class="btn-language btn-language-clicked" id="THNA">
-      all langauge
+      all langauges
     </button>
     <button class="btn-language" id="TH">ภาษาไทย</button>
     <button class="btn-language" id="NA">except Thai</button>
@@ -13,7 +13,7 @@
   >
     Your Liked Playlist
   </h3>
-  <div class="con" style="padding:0">
+  <div class="con" style="padding: 0">
     <div
       class="row"
       v-for="(playlistArr, i) in playlistArr"
@@ -127,25 +127,26 @@ export default {
   mounted() {
     this.clickLanguage();
     let auth = getAuth();
-    const isLoggedIn = false
+    const isLoggedIn = false;
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        axios.get('http://localhost:4000/api')
-        .then((response) => {
-        const email = user.email
-        const tempArr = []
-        for (let i = 0; i < response.data.length; i++) {
-          if (email == response.data[i].userEmail){
-            tempArr.push(response.data[i])
-          }
-        }
-        this.playlistArr = tempArr
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+        axios
+          .get("http://localhost:4000/api")
+          .then((response) => {
+            const email = user.email;
+            const tempArr = [];
+            for (let i = 0; i < response.data.length; i++) {
+              if (email == response.data[i].userEmail) {
+                tempArr.push(response.data[i]);
+              }
+            }
+            this.playlistArr = tempArr;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       } else {
-        console.log("Not Log in")
+        console.log("Not Log in");
       }
     });
   },
@@ -185,21 +186,24 @@ export default {
         $(".TH, .NA").show();
       });
       $(".unLike-button").click(function () {
-        $(this).parent('div').parent('div').hide();
-        alert("unlike: "+ $(this).val())
+        $(this).parent("div").parent("div").hide();
+        alert("unlike: " + $(this).val());
       });
     },
-    deleteFavorite(id){
+    deleteFavorite(id) {
       let apiURL = `http://localhost:4000/api/delete-favorite/${id}`;
-      let indexOfArrayItem = this.playlistArr.findIndex(i => i._id === id);
+      let indexOfArrayItem = this.playlistArr.findIndex((i) => i._id === id);
       if (window.confirm("Do you really want to unlike?")) {
-          axios.delete(apiURL).then(() => {
-              this.playlistArr.splice(indexOfArrayItem, 1);
-          }).catch(error => {
-              console.log(error)
+        axios
+          .delete(apiURL)
+          .then(() => {
+            this.playlistArr.splice(indexOfArrayItem, 1);
+          })
+          .catch((error) => {
+            console.log(error);
           });
       }
-    }
+    },
   },
 };
 </script>

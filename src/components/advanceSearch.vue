@@ -48,7 +48,7 @@
           />
         </div>
         <div class="col-md-4 hide-col-search advance-search-des">
-          <div>Ex. AIzaSyDLTVVua6frOq6RmspTcGk2p7PSSmtiALA</div>
+          <div>Ex. AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg</div>
           <router-link to="/guide"
             >how to get API key
             <svg
@@ -81,8 +81,9 @@
             id="validationDefault03"
           >
             <option value="rating">rating</option>
-            <option value="viewCount">view count</option>
+            <option value="date">date</option>
             <option value="videoCount">video count</option>
+            <option value="viewCount">view count</option>
           </select>
         </div>
         <div class="col-md-4">
@@ -103,7 +104,7 @@
               d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"
             />
           </svg>
-          
+
           <!-- The Modal -->
           <div id="myModal" class="modal">
             <!-- Modal content -->
@@ -128,8 +129,9 @@
               ></span>
               <ul>
                 <li>
-                  <span style="font-weight: 700">rating</span> - Resources are
-                  sorted from highest to lowest rating.
+                  <span style="font-weight: 700">rating</span> - This filter
+                  will measure how the video quality was before you see. Means
+                  good video gather good response by up like or positive like
                 </li>
                 <li>
                   <span style="font-weight: 700">video count</span> - Channels
@@ -139,6 +141,11 @@
                 <li>
                   <span style="font-weight: 700">view count</span> - Resources
                   are sorted from highest to lowest number of views.
+                </li>
+                <li>
+                  <span style="font-weight: 700">date</span> - Resources are
+                  sorted in reverse chronological order based on the date they
+                  were created.
                 </li>
               </ul>
             </div>
@@ -283,14 +290,20 @@
               :src="this.playlistArr[i].playlistThumbnail"
             />
           </td>
-          <td>
-            <p class="stat-info">{{ this.playlistArr[i].sumViewCount }}</p>
+          <td style="text-align: right">
+            <p class="stat-info">
+              {{ this.playlistArr[i].sumViewCount.toLocaleString() }}
+            </p>
           </td>
-          <td>
-            <p class="stat-info">{{ this.playlistArr[i].sumLikeCount }}</p>
+          <td style="text-align: right">
+            <p class="stat-info">
+              {{ this.playlistArr[i].sumLikeCount.toLocaleString() }}
+            </p>
           </td>
-          <td>
-            <p class="stat-info">{{ this.playlistArr[i].videos.length }}</p>
+          <td style="text-align: right">
+            <p class="stat-info">
+              {{ this.playlistArr[i].videos.length.toLocaleString() }}
+            </p>
           </td>
           <td class="hide-col">
             <p class="stat-info">
@@ -438,21 +451,21 @@ export default {
             this.orderBy
           }&regionCode=TH`
         )
-        .then((response) => {
-          if (response.status != 200) {
-            alert("API key error");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          JSON.stringify(data);
-          if (data["items"].length > 0) {
-            this.orderCheck = true;
-          }
-          if (data["items"].length == 0) {
-            this.orderCheck = false;
-          }
-        });
+          .then((response) => {
+            if (response.status != 200) {
+              alert("API key error");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            JSON.stringify(data);
+            if (data["items"].length > 0) {
+              this.orderCheck = true;
+            }
+            if (data["items"].length == 0) {
+              this.orderCheck = false;
+            }
+          });
       } else {
         alert("invalid data");
         if (this.searchWord.trim() == "") {
@@ -466,7 +479,9 @@ export default {
     spacialCaseSearch(nextPagePlaylist) {
       var html = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${this.searchWord.trim()}&key=${
         this.apiKey
-      }&maxResults=50&type=playlist&relevanceLanguage=th&regionCode=TH`;
+      }&maxResults=${
+        this.maxResault
+      }&type=playlist&relevanceLanguage=th&order=${this.orderBy}&regionCode=TH`;
       if (this.orderCheck) {
         html = html + `&order=${this.orderBy}`;
       }
@@ -622,6 +637,15 @@ export default {
           if (REGEX_TH.test(description)) {
             TH = true;
           }
+          if (isNaN(viewCount)) {
+            viewCount = 0;
+          }
+          if (isNaN(likeCount)) {
+            likeCount = 0;
+          }
+          if (isNaN(commentCount)) {
+            commentCount = 0;
+          }
           this.playlistArr[playlistIndex]["videos"][videoIndex][
             "videoInfo"
           ].push({
@@ -644,17 +668,11 @@ export default {
         this.playlistArr[playlistIndex].videos[
           videoIndex
         ].videoInfo[0].likeCount;
-      // if (
-      //   this.playlistArr[playlistIndex].videos[videoIndex].videoInfo[0].titleTH
-      // ) {
-      //   this.playlistArr[playlistIndex].sumTitleTH += 1;
+      // if (this.playlistArr.length == this.maxResault) {
+      //   if (this.orderBy == "viewCount") {
+      //     this.sortViews();
+      //   }
       // }
-      // if (
-      //   this.playlistArr[playlistIndex].videos[videoIndex].videoInfo[0].desTH
-      // ) {
-      //   this.playlistArr[playlistIndex].sumDesTH += 1;
-      // }
-      // this.playlistArr.sort((firstItem, secondItem) => secondItem.sumViewCount - firstItem.sumViewCount);
     },
     sortViews() {
       this.playlistArr.sort(
