@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="con small-playlist-header">
+  <div class="con small-playlist-header">
     <div class="row">
       <div class="col-sm-12">
         <h1 style="font-style: normal; font-weight: 500; font-size: 20px">
