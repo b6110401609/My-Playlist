@@ -48,7 +48,7 @@
           />
         </div>
         <div class="col-md-4 hide-col-search advance-search-des">
-          <div>Ex. AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg</div>
+          <div>Ex. AIzaSyBqt0CZPusyU5RgI2VstNUCznNeNGVdws0</div>
           <router-link to="/guide"
             >how to get API key
             <svg
