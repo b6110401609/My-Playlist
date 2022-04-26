@@ -13,15 +13,11 @@ vue-mevn-crud use - npm run serve
 backend use - npm run server
 ```
 
-<!-- ### Compiles and minifies for production
+### Deployment
 ```
-npm run build
+1. Use bash terminal
+2. type "npm run deploy"
 ```
-
-### Lints and fixes files
-```
-npm run lint
-``` -->
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
