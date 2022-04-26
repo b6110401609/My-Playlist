@@ -48,7 +48,7 @@
           />
         </div>
         <div class="col-md-4 hide-col-search advance-search-des">
-          <div>Ex. AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg</div>
+          <div>Ex. AIzaSyBzK8ACnETH2o2ZVu_WGA0XqDLeqy0jCGg</div>
           <router-link to="/guide"
             >how to get API key
             <svg
@@ -277,11 +277,17 @@
         <tr v-for="(playlistArr, i) in playlistArr" :key="i">
           <th scope="row">{{ this.playlistArr[i].index }}</th>
           <td>
-            <router-link
+            <!-- <router-link
               style="color: inherit"
               :to="{ path: '/info/' + this.playlistArr[i].playlistId }"
               >{{ this.playlistArr[i].playlistTitle }}</router-link
+            > -->
+            <div
+              class="playlist-title" style="color: inherit;text-decoration: underline;cursor: pointer"
+              @click="openInYoutube(this.playlistArr[i].playlistId)"
             >
+              {{ this.playlistArr[i].playlistTitle }}
+            </div>
           </td>
           <td class="hide-col">
             <img
@@ -423,6 +429,9 @@ export default {
           modal.style.display = "none";
         }
       };
+    },
+    openInYoutube(id) {
+      window.open("https://www.youtube.com/playlist?list=" + id);
     },
     getPlaylistID() {
       $("#not_match").hide();

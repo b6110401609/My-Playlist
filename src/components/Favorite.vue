@@ -155,7 +155,7 @@ export default {
       chooseLanguage: "",
       playlistArr: [],
       toggle: false,
-      apiKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
+      apiKey: "AIzaSyBzK8ACnETH2o2ZVu_WGA0XqDLeqy0jCGg",
       searchWord: "",
       url: "https://www.youtube.com/embed/videoseries?list=",
     };

@@ -251,55 +251,72 @@
       padding-bottom: 0px;
     "
   >
-    <router-link
-      :to="{ path: '/info/' + this.playlistArr[i].playlistId }"
-      style="text-decoration: none; color: inherit"
+    <div
+      class="row"
+      style="
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-bottom: 1px solid #cccccc;
+        margin-left: 0px;
+        margin-right: 0px;
+      "
     >
-      <div
-        class="row"
-        style="
-          padding-bottom: 10px;
-          padding-top: 10px;
-          border-bottom: 1px solid #cccccc;
-          margin-left: 0px;
-          margin-right: 0px;
-        "
-      >
-        <div class="col-md-1 rank-col">
-          <div
-            class="numberCircle"
-            style="font-size: 25px; margin-top: 0px"
-            :id="'rank_' + i"
-          >
-            {{ i + 1 }}
-          </div>
-        </div>
-        <div class="col-md-5">
-          <img
-            class="playlist-thumbnail"
-            :src="this.playlistArr[i].playlistThumbnail"
-            style="width: 100%; height: 205px"
-          />
-        </div>
-        <div class="col-md-6">
-          <div class="playlist-title">
-            <p>
-              {{ this.playlistArr[i].playlistTitle }}
-            </p>
-          </div>
-          <div class="playlist-channel">
-            <img
-              class="channel-thumbnail"
-              :src="this.playlistArr[i].channelThumbnail"
-            />
-            <p class="channel-name">{{ this.playlistArr[i].channelTitle }}</p>
-          </div>
-          <div class="playlist-description">
-            <p>{{ this.playlistArr[i].playlisDescription }}</p>
-          </div>
+      <div class="col-md-1 rank-col">
+        <div
+          class="numberCircle"
+          style="font-size: 25px; margin-top: 0px"
+          :id="'rank_' + i"
+        >
+          {{ i + 1 }}
         </div>
       </div>
-    </router-link>
+      <div class="col-md-5">
+        <img
+          class="playlist-thumbnail"
+          :src="this.playlistArr[i].playlistThumbnail"
+          style="width: 100%; height: 205px"
+        />
+      </div>
+      <div class="col-md-6">
+        <div
+          class="playlist-title" style="cursor: pointer"
+          @click="openInYoutube(this.playlistArr[i].playlistId)"
+        >
+          {{ this.playlistArr[i].playlistTitle }}
+        </div>
+        <div class="playlist-channel">
+          <img
+            class="channel-thumbnail"
+            :src="this.playlistArr[i].channelThumbnail"
+          />
+          <p class="channel-name">{{ this.playlistArr[i].channelTitle }}</p>
+        </div>
+        <div class="playlist-description">
+          <p>{{ this.playlistArr[i].playlisDescription }}</p>
+        </div>
+        <router-link
+          :to="{ path: '/info/' + this.playlistArr[i].playlistId }"
+          style="text-decoration: ; color: inherit"
+        >
+          <span class="badge badge-secondary" style="background-color: gray"
+            >more info in My Playlist
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              fill="currentColor"
+              class="bi bi-arrow-up-right"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M14 2.5a.5.5 0 0 0-.5-.5h-6a.5.5 0 0 0 0 1h4.793L2.146 13.146a.5.5 0 0 0 .708.708L13 3.707V8.5a.5.5 0 0 0 1 0v-6z"
+              />
+            </svg>
+          </span>
+        </router-link>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -318,7 +335,7 @@ export default {
       toggle: false,
       orderBy: "",
       maxResault: "",
-      apiKey: "AIzaSyDPBFn6K38lsvibpnVVLaDAN4G7khpIXkg",
+      apiKey: "AIzaSyBzK8ACnETH2o2ZVu_WGA0XqDLeqy0jCGg",
       searchWord: "",
       onlyTH: false,
     };
@@ -349,6 +366,9 @@ export default {
           modal.style.display = "none";
         }
       };
+    },
+    openInYoutube(id) {
+      window.open("https://www.youtube.com/playlist?list=" + id);
     },
     click() {
       $("#show_more").click(function () {
@@ -577,7 +597,7 @@ export default {
 .con {
   padding: 10px;
 }
-.playlist-title p {
+.playlist-title {
   margin: 0;
   font-weight: 500;
   font-size: 16px;
